@@ -8,3 +8,11 @@ __pycache__/
 backups/
 backend/app.db
 backend/app_backup_*.db
+
+*.csv
+
+backend/.env
+
+backend/app.db
+.venv/
+__pycache__/
