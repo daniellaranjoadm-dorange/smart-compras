@@ -68,7 +68,11 @@ router = APIRouter()
 def criar_usuario(payload: UsuarioCreate, db: Session = Depends(get_db)):
     item = Usuario(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -82,7 +86,11 @@ def listar_usuarios(db: Session = Depends(get_db)):
 def criar_estado(payload: EstadoCreate, db: Session = Depends(get_db)):
     item = Estado(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -96,7 +104,11 @@ def listar_estados(db: Session = Depends(get_db)):
 def criar_cidade(payload: CidadeCreate, db: Session = Depends(get_db)):
     item = Cidade(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -115,7 +127,11 @@ def listar_cidades_por_estado(estado_id: int, db: Session = Depends(get_db)):
 def criar_rede(payload: RedeMercadoCreate, db: Session = Depends(get_db)):
     item = RedeMercado(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -129,7 +145,11 @@ def listar_redes(db: Session = Depends(get_db)):
 def criar_unidade(payload: UnidadeMercadoCreate, db: Session = Depends(get_db)):
     item = UnidadeMercado(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -148,7 +168,11 @@ def listar_unidades_por_cidade(cidade_id: int, db: Session = Depends(get_db)):
 def criar_categoria(payload: CategoriaCreate, db: Session = Depends(get_db)):
     item = Categoria(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -162,7 +186,11 @@ def listar_categorias(db: Session = Depends(get_db)):
 def criar_produto(payload: ProdutoCreate, db: Session = Depends(get_db)):
     item = Produto(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -176,7 +204,11 @@ def listar_produtos(db: Session = Depends(get_db)):
 def criar_lista_modelo(payload: ListaModeloCreate, db: Session = Depends(get_db)):
     item = ListaModelo(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -193,7 +225,11 @@ def listar_listas_modelo(db: Session = Depends(get_db), usuario_id: int | None =
 def criar_item_lista_modelo(payload: ItemListaModeloCreate, db: Session = Depends(get_db)):
     item = ItemListaModelo(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -210,7 +246,11 @@ def listar_itens_lista_modelo(db: Session = Depends(get_db), lista_modelo_id: in
 def criar_lista(payload: ListaCompraCreate, db: Session = Depends(get_db)):
     item = ListaCompra(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -239,7 +279,11 @@ def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
         gerada_em=agora,
     )
     db.add(nova_lista)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(nova_lista)
 
     itens_modelo = db.query(ItemListaModelo).filter(ItemListaModelo.lista_modelo_id == modelo.id).all()
@@ -252,7 +296,11 @@ def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
         )
         db.add(novo_item)
 
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(nova_lista)
     return nova_lista
 
@@ -261,7 +309,11 @@ def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
 def criar_item(payload: ItemListaCompraCreate, db: Session = Depends(get_db)):
     item = ItemListaCompra(**payload.model_dump())
     db.add(item)
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     db.refresh(item)
     return item
 
@@ -287,7 +339,11 @@ def criar_preco(payload: PrecoProdutoCreate, db: Session = Depends(get_db)):
 
     if existente:
         existente.preco = payload.preco
-        db.commit()
+        try:
+    db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
         db.refresh(existente)
         return existente
 
@@ -295,7 +351,11 @@ def criar_preco(payload: PrecoProdutoCreate, db: Session = Depends(get_db)):
     db.add(item)
 
     try:
-        db.commit()
+        try:
+    db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=400, detail="Nao foi possivel salvar o preco.")
@@ -358,7 +418,11 @@ def importar_precos_csv(arquivo: UploadFile = File(...), db: Session = Depends(g
         except Exception as e:
             erros.append(f"Linha {total_linhas}: erro ao processar ({str(e)}).")
 
+    try:
     db.commit()
+except Exception as e:
+    db.rollback()
+    raise HTTPException(status_code=400, detail="Email ja cadastrado.")
 
     return {
         "arquivo": arquivo.filename,
