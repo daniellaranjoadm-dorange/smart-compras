@@ -4,45 +4,169 @@
     <meta charset="UTF-8">
     <title>Smart Compras</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 24px; background: #f5f7fb; color: #1f2937; }
-        h1, h2, h3 { margin-bottom: 8px; }
-        .muted { color: #6b7280; font-size: 14px; }
-        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-        .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
-        .field { display: flex; flex-direction: column; min-width: 220px; }
-        label { font-size: 14px; margin-bottom: 6px; }
-        select, input, button { padding: 10px; font-size: 14px; border-radius: 8px; border: 1px solid #d1d5db; }
-        button { cursor: pointer; background: #111827; color: white; border: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
-        .metric { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
-        .metric .label { font-size: 13px; color: #6b7280; margin-bottom: 6px; }
-        .metric .value { font-size: 24px; font-weight: bold; }
-        .hidden { display: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; }
-        th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-size: 14px; }
-        th { background: #f9fafb; }
-        pre { background: #111827; color: #d1fae5; padding: 16px; border-radius: 10px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
-        .good { color: #065f46; font-weight: bold; }
-        .section-title { margin-top: 24px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+        h1, h2, h3 {
+            margin-bottom: 8px;
+        }
+        .muted {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            min-width: 220px;
+            flex: 1;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        select, input, button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+        button {
+            cursor: pointer;
+            background: #111827;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            opacity: 0.95;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .metric {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .metric .label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+        .metric .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background: #f9fafb;
+        }
+        pre {
+            background: #111827;
+            color: #d1fae5;
+            padding: 16px;
+            border-radius: 10px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .good {
+            color: #065f46;
+            font-weight: bold;
+        }
+        .warning {
+            color: #92400e;
+            font-weight: bold;
+        }
+        .section-title {
+            margin-top: 24px;
+        }
+        .banner {
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-top: 12px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .banner.good {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+        .banner.warning {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+        .pill {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+        .pill.good {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .pill.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
     </style>
 </head>
 <body>
     <h1>Smart Compras</h1>
-    <p class="muted">Painel com usuarios, listas pessoais, comparacao por cidade e importacao CSV.</p>
+    <p class="muted">Compare mercados, gere listas e veja a melhor estratégia de compra.</p>
 
     <div class="card">
-        <h2>Cadastrar usuario</h2>
+        <h2>Cadastrar usuário</h2>
         <div class="row">
             <div class="field">
                 <label for="novoUsuarioNome">Nome</label>
                 <input id="novoUsuarioNome" type="text" placeholder="Ex.: Joao">
             </div>
             <div class="field">
-                <label for="novoUsuarioEmail">Email opcional</label>
-                <input id="novoUsuarioEmail" type="text" placeholder="Ex.: joao@local">
+                <label for="novoUsuarioEmail">Email</label>
+                <input id="novoUsuarioEmail" type="text" placeholder="Ex.: joao@email.com">
             </div>
             <div class="field">
-                <button id="btnCriarUsuario">Cadastrar usuario</button>
+                <button id="btnCriarUsuario">Cadastrar usuário</button>
             </div>
         </div>
     </div>
@@ -51,11 +175,15 @@
         <h2>Contexto</h2>
         <div class="row">
             <div class="field">
-                <label for="usuario">Usuario</label>
+                <label for="usuario">Usuário</label>
                 <select id="usuario"></select>
             </div>
             <div class="field">
-                <button id="btnRecarregarListas">Carregar listas do usuario</button>
+                <label for="cidade">Cidade</label>
+                <select id="cidade"></select>
+            </div>
+            <div class="field">
+                <button id="btnRecarregar">Atualizar dados</button>
             </div>
         </div>
     </div>
@@ -68,18 +196,14 @@
                 <input id="novaListaNome" type="text" placeholder="Ex.: Compra Mensal Joao">
             </div>
             <div class="field">
-                <button id="btnCriarLista">Criar lista para usuario selecionado</button>
+                <button id="btnCriarLista">Criar lista</button>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <h2>Comparacao</h2>
+        <h2>Comparação</h2>
         <div class="row">
-            <div class="field">
-                <label for="cidade">Cidade</label>
-                <select id="cidade"></select>
-            </div>
             <div class="field">
                 <label for="lista">Lista</label>
                 <select id="lista"></select>
@@ -88,13 +212,16 @@
                 <button id="btnComparar">Comparar cidade</button>
             </div>
             <div class="field">
-                <button id="btnOtimizada">Comparacao otimizada</button>
+                <button id="btnOtimizada">Comparação otimizada</button>
+            </div>
+            <div class="field">
+                <button id="btnResumo">Resumo inteligente</button>
             </div>
         </div>
     </div>
 
     <div class="card">
-        <h2>Importar precos por CSV</h2>
+        <h2>Importar preços por CSV</h2>
         <div class="row">
             <div class="field">
                 <label for="arquivoCsv">Arquivo CSV</label>
@@ -108,39 +235,48 @@
     </div>
 
     <div id="dashboard" class="hidden">
-<div class="card" id="resumoInteligenteCard">
-    <h3>Resumo inteligente</h3>
-    <div class="grid">
-        <div class="metric">
-            <div class="label">Melhor unidade</div>
-            <div class="value" id="resumoMelhorUnidade">-</div>
-        </div>
-        <div class="metric">
-            <div class="label">Melhor rede</div>
-            <div class="value" id="resumoMelhorRede">-</div>
-        </div>
-        <div class="metric">
-            <div class="label">Mercados utilizados</div>
-            <div class="value" id="resumoQtdMercados">-</div>
-        </div>
-        <div class="metric">
-            <div class="label">Economia estimada</div>
-            <div class="value good" id="resumoEconomia">-</div>
-        </div>
-    </div>
-
-    <div style="margin-top:12px;">
-        <strong>Recomendação:</strong>
-        <p id="resumoRecomendacao">-</p>
-    </div>
-</div>
         <h2 class="section-title">Resumo</h2>
         <div class="grid">
-            <div class="metric"><div class="label">Melhor unidade</div><div class="value" id="melhorUnidade">-</div></div>
-            <div class="metric"><div class="label">Melhor rede</div><div class="value" id="melhorRede">-</div></div>
-            <div class="metric"><div class="label">Melhor total</div><div class="value" id="melhorTotal">-</div></div>
-            <div class="metric"><div class="label">Total otimizado</div><div class="value" id="totalOtimizado">-</div></div>
-            <div class="metric"><div class="label">Economia</div><div class="value good" id="economia">-</div></div>
+            <div class="metric">
+                <div class="label">Melhor unidade</div>
+                <div class="value" id="melhorUnidade">-</div>
+            </div>
+            <div class="metric">
+                <div class="label">Melhor rede</div>
+                <div class="value" id="melhorRede">-</div>
+            </div>
+            <div class="metric">
+                <div class="label">Total melhor unidade</div>
+                <div class="value" id="melhorTotal">-</div>
+            </div>
+            <div class="metric">
+                <div class="label">Total otimizado</div>
+                <div class="value" id="totalOtimizado">-</div>
+            </div>
+            <div class="metric">
+                <div class="label">Economia</div>
+                <div class="value" id="economia">-</div>
+            </div>
+            <div class="metric">
+                <div class="label">Economia %</div>
+                <div class="value" id="economiaPercentual">-</div>
+            </div>
+        </div>
+
+        <div id="resumoBox" class="card hidden">
+            <h3>Recomendação</h3>
+            <div id="resumoBadge" class="pill">-</div>
+            <div id="resumoTexto" class="banner">-</div>
+            <div class="grid">
+                <div class="metric">
+                    <div class="label">Mercados usados na otimização</div>
+                    <div class="value" id="mercadosUsados">-</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Vale dividir a compra?</div>
+                    <div class="value" id="valeDividir">-</div>
+                </div>
+            </div>
         </div>
 
         <div id="otimizadaSection" class="card hidden">
@@ -152,7 +288,7 @@
                         <th>Quantidade</th>
                         <th>Unidade</th>
                         <th>Rede</th>
-                        <th>Preco unitario</th>
+                        <th>Preço unitário</th>
                         <th>Subtotal</th>
                     </tr>
                 </thead>
@@ -161,7 +297,7 @@
         </div>
 
         <div id="comparacaoSection" class="card hidden">
-            <h3>Comparacao por unidade</h3>
+            <h3>Comparação por unidade</h3>
             <table>
                 <thead>
                     <tr>
@@ -179,7 +315,7 @@
     </div>
 
     <div class="card">
-        <h2>Saida tecnica</h2>
+        <h2>Saída técnica</h2>
         <pre id="saida">Carregando dados iniciais...</pre>
     </div>
 
@@ -195,9 +331,10 @@
 
         const btnCriarUsuario = document.getElementById("btnCriarUsuario");
         const btnCriarLista = document.getElementById("btnCriarLista");
-        const btnRecarregarListas = document.getElementById("btnRecarregarListas");
+        const btnRecarregar = document.getElementById("btnRecarregar");
         const btnComparar = document.getElementById("btnComparar");
         const btnOtimizada = document.getElementById("btnOtimizada");
+        const btnResumo = document.getElementById("btnResumo");
         const btnUpload = document.getElementById("btnUpload");
         const arquivoCsv = document.getElementById("arquivoCsv");
 
@@ -207,6 +344,14 @@
         const melhorTotal = document.getElementById("melhorTotal");
         const totalOtimizado = document.getElementById("totalOtimizado");
         const economia = document.getElementById("economia");
+        const economiaPercentual = document.getElementById("economiaPercentual");
+
+        const resumoBox = document.getElementById("resumoBox");
+        const resumoBadge = document.getElementById("resumoBadge");
+        const resumoTexto = document.getElementById("resumoTexto");
+        const mercadosUsados = document.getElementById("mercadosUsados");
+        const valeDividir = document.getElementById("valeDividir");
+
         const comparacaoSection = document.getElementById("comparacaoSection");
         const otimizadaSection = document.getElementById("otimizadaSection");
         const tbodyComparacao = document.getElementById("tbodyComparacao");
@@ -215,6 +360,11 @@
         function fmtMoeda(v) {
             if (v === null || v === undefined) return "-";
             return Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function fmtPercent(v) {
+            if (v === null || v === undefined) return "-";
+            return `${Number(v).toLocaleString("pt-BR")} %`;
         }
 
         function mostrar(obj) {
@@ -264,23 +414,7 @@
             await carregarSelect(`/api/listas?usuario_id=${usuarioId}`, listaSelect, "nome", listaSelecionada);
         }
 
-        async function carregarResumoInteligente(cidadeId, listaId) {
-    if (!cidadeId || !listaId) return;
-
-    try {
-        const data = await fetchJson(`/api/resumo/cidade/${cidadeId}/lista/${listaId}`);
-
-        document.getElementById("resumoMelhorUnidade").textContent = data.melhor_unidade_nome ?? "-";
-        document.getElementById("resumoMelhorRede").textContent = data.melhor_rede_nome ?? "-";
-        document.getElementById("resumoQtdMercados").textContent = data.quantidade_mercados_otimizados ?? "-";
-        document.getElementById("resumoEconomia").textContent = fmtMoeda(data.economia_total);
-        document.getElementById("resumoRecomendacao").textContent = data.recomendacao ?? "-";
-    } catch (err) {
-        console.error("Erro ao carregar resumo inteligente", err);
-    }
-}
-
-async function carregarIniciais() {
+        async function carregarIniciais() {
             try {
                 await carregarUsuarios();
                 await carregarCidades();
@@ -295,26 +429,39 @@ async function carregarIniciais() {
             dashboard.classList.remove("hidden");
             comparacaoSection.classList.add("hidden");
             otimizadaSection.classList.add("hidden");
+            resumoBox.classList.add("hidden");
+
             tbodyComparacao.innerHTML = "";
             tbodyOtimizada.innerHTML = "";
+
             melhorUnidade.textContent = "-";
             melhorRede.textContent = "-";
             melhorTotal.textContent = "-";
             totalOtimizado.textContent = "-";
             economia.textContent = "-";
+            economiaPercentual.textContent = "-";
+            resumoTexto.textContent = "-";
+            mercadosUsados.textContent = "-";
+            valeDividir.textContent = "-";
+
+            resumoTexto.className = "banner";
+            resumoBadge.className = "pill";
         }
 
         function preencherResumoBase(data) {
             dashboard.classList.remove("hidden");
             melhorUnidade.textContent = data.melhor_unidade_nome ?? "-";
             melhorRede.textContent = data.melhor_rede_nome ?? "-";
-            melhorTotal.textContent = fmtMoeda(data.melhor_total);
+            melhorTotal.textContent = fmtMoeda(data.melhor_total ?? data.total_melhor_unidade);
+            totalOtimizado.textContent = fmtMoeda(data.total_otimizado);
         }
 
-        async function renderComparacao(data) {
+        function renderComparacao(data) {
             limparDashboard();
-            preencherResumoBase(data);
-            await carregarResumoInteligente(cidadeSelect.value, listaSelect.value);
+            dashboard.classList.remove("hidden");
+            melhorUnidade.textContent = data.melhor_unidade_nome ?? "-";
+            melhorRede.textContent = data.melhor_rede_nome ?? "-";
+            melhorTotal.textContent = fmtMoeda(data.melhor_total);
             comparacaoSection.classList.remove("hidden");
 
             for (const unidade of data.unidades) {
@@ -334,11 +481,10 @@ async function carregarIniciais() {
         async function renderOtimizada(data) {
             limparDashboard();
             preencherResumoBase(data);
-            await carregarResumoInteligente(cidadeSelect.value, listaSelect.value);
-            comparacaoSection.classList.remove("hidden");
-            otimizadaSection.classList.remove("hidden");
 
-            totalOtimizado.textContent = fmtMoeda(data.total_otimizado);
+            otimizadaSection.classList.remove("hidden");
+            comparacaoSection.classList.remove("hidden");
+
             economia.textContent = fmtMoeda(data.economia_vs_melhor_unidade);
 
             for (const item of data.itens) {
@@ -356,24 +502,46 @@ async function carregarIniciais() {
 
             const cidadeId = cidadeSelect.value;
             const listaId = listaSelect.value;
+            const base = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`);
 
-            fetch(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`)
-                .then(r => r.json())
-                .then(base => {
-                    for (const unidade of base.unidades) {
-                        const tr = document.createElement("tr");
-                        tr.innerHTML = `
-                            <td>${unidade.unidade_nome}</td>
-                            <td>${unidade.rede_nome}</td>
-                            <td>${fmtMoeda(unidade.total)}</td>
-                            <td>${unidade.itens_encontrados}</td>
-                            <td>${unidade.itens_faltantes}</td>
-                            <td>${unidade.completo ? "Sim" : "Nao"}</td>
-                        `;
-                        tbodyComparacao.appendChild(tr);
-                    }
-                })
-                .catch(err => mostrar({ erro: "Falha ao carregar comparacao base.", detalhe: String(err) }));
+            for (const unidade of base.unidades) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${unidade.unidade_nome}</td>
+                    <td>${unidade.rede_nome}</td>
+                    <td>${fmtMoeda(unidade.total)}</td>
+                    <td>${unidade.itens_encontrados}</td>
+                    <td>${unidade.itens_faltantes}</td>
+                    <td>${unidade.completo ? "Sim" : "Nao"}</td>
+                `;
+                tbodyComparacao.appendChild(tr);
+            }
+        }
+
+        function renderResumoInteligente(data) {
+            limparDashboard();
+            dashboard.classList.remove("hidden");
+            resumoBox.classList.remove("hidden");
+
+            melhorUnidade.textContent = data.melhor_unidade_nome ?? "-";
+            melhorRede.textContent = data.melhor_rede_nome ?? "-";
+            melhorTotal.textContent = fmtMoeda(data.total_melhor_unidade);
+            totalOtimizado.textContent = fmtMoeda(data.total_otimizado);
+            economia.textContent = fmtMoeda(data.economia_valor);
+            economiaPercentual.textContent = fmtPercent(data.economia_percentual);
+            mercadosUsados.textContent = data.quantidade_mercados_otimizados;
+            valeDividir.textContent = data.vale_dividir_compra ? "Sim" : "Nao";
+            resumoTexto.textContent = data.recomendacao;
+
+            if (data.vale_dividir_compra) {
+                resumoTexto.className = "banner good";
+                resumoBadge.className = "pill good";
+                resumoBadge.textContent = "Vale dividir";
+            } else {
+                resumoTexto.className = "banner warning";
+                resumoBadge.className = "pill warning";
+                resumoBadge.textContent = "Melhor comprar em um so mercado";
+            }
         }
 
         btnCriarUsuario.addEventListener("click", async () => {
@@ -386,11 +554,10 @@ async function carregarIniciais() {
                     return;
                 }
 
-                const payload = { nome, email: email || null };
                 const criado = await fetchJson("/api/usuarios", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ nome, email: email || null })
                 });
 
                 await carregarUsuarios(criado.id);
@@ -410,7 +577,7 @@ async function carregarIniciais() {
                 const nome = novaListaNome.value.trim();
 
                 if (!usuarioId) {
-                    mostrar({ erro: "Selecione um usuario antes de criar a lista." });
+                    mostrar({ erro: "Selecione um usuario." });
                     return;
                 }
 
@@ -434,12 +601,14 @@ async function carregarIniciais() {
             }
         });
 
-        btnRecarregarListas.addEventListener("click", async () => {
+        btnRecarregar.addEventListener("click", async () => {
             try {
+                await carregarUsuarios();
+                await carregarCidades();
                 await carregarListasDoUsuario();
-                mostrar({ status: "ok", mensagem: "Listas do usuario carregadas." });
+                mostrar({ status: "ok", mensagem: "Dados atualizados." });
             } catch (err) {
-                mostrar({ erro: "Falha ao carregar listas do usuario.", detalhe: String(err) });
+                mostrar({ erro: "Falha ao atualizar dados.", detalhe: String(err) });
             }
         });
 
@@ -452,18 +621,14 @@ async function carregarIniciais() {
         });
 
         btnComparar.addEventListener("click", async () => {
-    try {
-        const cidadeId = cidadeSelect.value;
-        const listaId = listaSelect.value;
-
-        const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`);
-
-        await renderComparacao(data);
-        mostrar(data);
-    } catch (err) {
-        mostrar({ erro: "Falha ao comparar cidade.", detalhe: String(err) });
-    }
-});
+            try {
+                const cidadeId = cidadeSelect.value;
+                const listaId = listaSelect.value;
+                const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`);
+                renderComparacao(data);
+                mostrar(data);
+            } catch (err) {
+                mostrar({ erro: "Falha ao comparar cidade.", detalhe: String(err) });
             }
         });
 
@@ -471,11 +636,23 @@ async function carregarIniciais() {
             try {
                 const cidadeId = cidadeSelect.value;
                 const listaId = listaSelect.value;
-                const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`)/lista/${listaId}/otimizada`);
-                renderOtimizada(data);
+                const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}/otimizada`);
+                await renderOtimizada(data);
                 mostrar(data);
             } catch (err) {
                 mostrar({ erro: "Falha na comparacao otimizada.", detalhe: String(err) });
+            }
+        });
+
+        btnResumo.addEventListener("click", async () => {
+            try {
+                const cidadeId = cidadeSelect.value;
+                const listaId = listaSelect.value;
+                const data = await fetchJson(`/api/resumo/cidade/${cidadeId}/lista/${listaId}`);
+                renderResumoInteligente(data);
+                mostrar(data);
+            } catch (err) {
+                mostrar({ erro: "Falha ao gerar resumo inteligente.", detalhe: String(err) });
             }
         });
 
@@ -502,11 +679,6 @@ async function carregarIniciais() {
         });
 
         carregarIniciais();
-</script>
+    </script>
 </body>
 </html>
-
-
-
-
-
