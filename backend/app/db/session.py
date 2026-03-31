@@ -1,9 +1,7 @@
-﻿from collections.abc import Generator
-
-from app.db.base import SessionLocal
+﻿from app.db.base import SessionLocal
 
 
-def get_db() -> Generator:
+def get_db():
     db = SessionLocal()
     try:
         yield db
