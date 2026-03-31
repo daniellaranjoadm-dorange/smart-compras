@@ -4,8 +4,11 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 
 from app.api.routes import router
+from app.db.base import Base, engine
 
 app = FastAPI(title="Smart Compras API", version="0.1.0")
+
+Base.metadata.create_all(bind=engine)
 
 app.include_router(router, prefix="/api")
 
