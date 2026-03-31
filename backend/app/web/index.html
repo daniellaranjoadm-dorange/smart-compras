@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Compras</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; background: #f5f7fb; color: #1f2937; }
+        h1, h2, h3 { margin-bottom: 8px; }
+        .muted { color: #6b7280; font-size: 14px; }
+        .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+        .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+        .field { display: flex; flex-direction: column; min-width: 220px; }
+        label { font-size: 14px; margin-bottom: 6px; }
+        select, input, button { padding: 10px; font-size: 14px; border-radius: 8px; border: 1px solid #d1d5db; }
+        button { cursor: pointer; background: #111827; color: white; border: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+        .metric { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; }
+        .metric .label { font-size: 13px; color: #6b7280; margin-bottom: 6px; }
+        .metric .value { font-size: 24px; font-weight: bold; }
+        .hidden { display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; }
+        th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; font-size: 14px; }
+        th { background: #f9fafb; }
+        pre { background: #111827; color: #d1fae5; padding: 16px; border-radius: 10px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+        .good { color: #065f46; font-weight: bold; }
+        .section-title { margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <h1>Smart Compras</h1>
+    <p class="muted">Painel com usuarios, listas pessoais, comparacao por cidade e importacao CSV.</p>
+
+    <div class="card">
+        <h2>Cadastrar usuario</h2>
+        <div class="row">
+            <div class="field">
+                <label for="novoUsuarioNome">Nome</label>
+                <input id="novoUsuarioNome" type="text" placeholder="Ex.: Joao">
+            </div>
+            <div class="field">
+                <label for="novoUsuarioEmail">Email opcional</label>
+                <input id="novoUsuarioEmail" type="text" placeholder="Ex.: joao@local">
+            </div>
+            <div class="field">
+                <button id="btnCriarUsuario">Cadastrar usuario</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Contexto</h2>
+        <div class="row">
+            <div class="field">
+                <label for="usuario">Usuario</label>
+                <select id="usuario"></select>
+            </div>
+            <div class="field">
+                <button id="btnRecarregarListas">Carregar listas do usuario</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Criar lista</h2>
+        <div class="row">
+            <div class="field">
+                <label for="novaListaNome">Nome da lista</label>
+                <input id="novaListaNome" type="text" placeholder="Ex.: Compra Mensal Joao">
+            </div>
+            <div class="field">
+                <button id="btnCriarLista">Criar lista para usuario selecionado</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Comparacao</h2>
+        <div class="row">
+            <div class="field">
+                <label for="cidade">Cidade</label>
+                <select id="cidade"></select>
+            </div>
+            <div class="field">
+                <label for="lista">Lista</label>
+                <select id="lista"></select>
+            </div>
+            <div class="field">
+                <button id="btnComparar">Comparar cidade</button>
+            </div>
+            <div class="field">
+                <button id="btnOtimizada">Comparacao otimizada</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Importar precos por CSV</h2>
+        <div class="row">
+            <div class="field">
+                <label for="arquivoCsv">Arquivo CSV</label>
+                <input type="file" id="arquivoCsv" accept=".csv">
+            </div>
+            <div class="field">
+                <button id="btnUpload">Enviar CSV</button>
+            </div>
+        </div>
+        <p class="muted">Formato esperado: produto_id,unidade_id,preco</p>
+    </div>
+
+    <div id="dashboard" class="hidden">
+<div class="card" id="resumoInteligenteCard">
+    <h3>Resumo inteligente</h3>
+    <div class="grid">
+        <div class="metric">
+            <div class="label">Melhor unidade</div>
+            <div class="value" id="resumoMelhorUnidade">-</div>
+        </div>
+        <div class="metric">
+            <div class="label">Melhor rede</div>
+            <div class="value" id="resumoMelhorRede">-</div>
+        </div>
+        <div class="metric">
+            <div class="label">Mercados utilizados</div>
+            <div class="value" id="resumoQtdMercados">-</div>
+        </div>
+        <div class="metric">
+            <div class="label">Economia estimada</div>
+            <div class="value good" id="resumoEconomia">-</div>
+        </div>
+    </div>
+
+    <div style="margin-top:12px;">
+        <strong>Recomendação:</strong>
+        <p id="resumoRecomendacao">-</p>
+    </div>
+</div>
+        <h2 class="section-title">Resumo</h2>
+        <div class="grid">
+            <div class="metric"><div class="label">Melhor unidade</div><div class="value" id="melhorUnidade">-</div></div>
+            <div class="metric"><div class="label">Melhor rede</div><div class="value" id="melhorRede">-</div></div>
+            <div class="metric"><div class="label">Melhor total</div><div class="value" id="melhorTotal">-</div></div>
+            <div class="metric"><div class="label">Total otimizado</div><div class="value" id="totalOtimizado">-</div></div>
+            <div class="metric"><div class="label">Economia</div><div class="value good" id="economia">-</div></div>
+        </div>
+
+        <div id="otimizadaSection" class="card hidden">
+            <h3>Itens otimizados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Unidade</th>
+                        <th>Rede</th>
+                        <th>Preco unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyOtimizada"></tbody>
+            </table>
+        </div>
+
+        <div id="comparacaoSection" class="card hidden">
+            <h3>Comparacao por unidade</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Unidade</th>
+                        <th>Rede</th>
+                        <th>Total</th>
+                        <th>Itens encontrados</th>
+                        <th>Itens faltantes</th>
+                        <th>Completo</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyComparacao"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Saida tecnica</h2>
+        <pre id="saida">Carregando dados iniciais...</pre>
+    </div>
+
+    <script>
+        const saida = document.getElementById("saida");
+        const usuarioSelect = document.getElementById("usuario");
+        const cidadeSelect = document.getElementById("cidade");
+        const listaSelect = document.getElementById("lista");
+
+        const novoUsuarioNome = document.getElementById("novoUsuarioNome");
+        const novoUsuarioEmail = document.getElementById("novoUsuarioEmail");
+        const novaListaNome = document.getElementById("novaListaNome");
+
+        const btnCriarUsuario = document.getElementById("btnCriarUsuario");
+        const btnCriarLista = document.getElementById("btnCriarLista");
+        const btnRecarregarListas = document.getElementById("btnRecarregarListas");
+        const btnComparar = document.getElementById("btnComparar");
+        const btnOtimizada = document.getElementById("btnOtimizada");
+        const btnUpload = document.getElementById("btnUpload");
+        const arquivoCsv = document.getElementById("arquivoCsv");
+
+        const dashboard = document.getElementById("dashboard");
+        const melhorUnidade = document.getElementById("melhorUnidade");
+        const melhorRede = document.getElementById("melhorRede");
+        const melhorTotal = document.getElementById("melhorTotal");
+        const totalOtimizado = document.getElementById("totalOtimizado");
+        const economia = document.getElementById("economia");
+        const comparacaoSection = document.getElementById("comparacaoSection");
+        const otimizadaSection = document.getElementById("otimizadaSection");
+        const tbodyComparacao = document.getElementById("tbodyComparacao");
+        const tbodyOtimizada = document.getElementById("tbodyOtimizada");
+
+        function fmtMoeda(v) {
+            if (v === null || v === undefined) return "-";
+            return Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function mostrar(obj) {
+            saida.textContent = JSON.stringify(obj, null, 2);
+        }
+
+        async function fetchJson(url, options = {}) {
+            const resp = await fetch(url, options);
+            const data = await resp.json();
+            if (!resp.ok) {
+                throw new Error(JSON.stringify(data));
+            }
+            return data;
+        }
+
+        async function carregarSelect(url, select, textoCampo = "nome", valorSelecionado = null) {
+            const data = await fetchJson(url);
+            const lista = Array.isArray(data) ? data : (data.value || []);
+
+            select.innerHTML = "";
+
+            for (const item of lista) {
+                const opt = document.createElement("option");
+                opt.value = item.id;
+                opt.textContent = item[textoCampo] ?? `${item.id}`;
+                if (valorSelecionado !== null && String(item.id) === String(valorSelecionado)) {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            }
+        }
+
+        async function carregarUsuarios(usuarioSelecionado = null) {
+            await carregarSelect("/api/usuarios", usuarioSelect, "nome", usuarioSelecionado);
+        }
+
+        async function carregarCidades() {
+            await carregarSelect("/api/cidades", cidadeSelect, "nome");
+        }
+
+        async function carregarListasDoUsuario(listaSelecionada = null) {
+            const usuarioId = usuarioSelect.value;
+            if (!usuarioId) {
+                listaSelect.innerHTML = "";
+                return;
+            }
+            await carregarSelect(`/api/listas?usuario_id=${usuarioId}`, listaSelect, "nome", listaSelecionada);
+        }
+
+        async function carregarResumoInteligente(cidadeId, listaId) {
+    if (!cidadeId || !listaId) return;
+
+    try {
+        const data = await fetchJson(`/api/resumo/cidade/${cidadeId}/lista/${listaId}`);
+
+        document.getElementById("resumoMelhorUnidade").textContent = data.melhor_unidade_nome ?? "-";
+        document.getElementById("resumoMelhorRede").textContent = data.melhor_rede_nome ?? "-";
+        document.getElementById("resumoQtdMercados").textContent = data.quantidade_mercados_otimizados ?? "-";
+        document.getElementById("resumoEconomia").textContent = fmtMoeda(data.economia_total);
+        document.getElementById("resumoRecomendacao").textContent = data.recomendacao ?? "-";
+    } catch (err) {
+        console.error("Erro ao carregar resumo inteligente", err);
+    }
+}
+
+async function carregarIniciais() {
+            try {
+                await carregarUsuarios();
+                await carregarCidades();
+                await carregarListasDoUsuario();
+                mostrar({ status: "ok", mensagem: "Dados iniciais carregados." });
+            } catch (err) {
+                mostrar({ erro: "Falha ao carregar dados iniciais.", detalhe: String(err) });
+            }
+        }
+
+        function limparDashboard() {
+            dashboard.classList.remove("hidden");
+            comparacaoSection.classList.add("hidden");
+            otimizadaSection.classList.add("hidden");
+            tbodyComparacao.innerHTML = "";
+            tbodyOtimizada.innerHTML = "";
+            melhorUnidade.textContent = "-";
+            melhorRede.textContent = "-";
+            melhorTotal.textContent = "-";
+            totalOtimizado.textContent = "-";
+            economia.textContent = "-";
+        }
+
+        function preencherResumoBase(data) {
+            dashboard.classList.remove("hidden");
+            melhorUnidade.textContent = data.melhor_unidade_nome ?? "-";
+            melhorRede.textContent = data.melhor_rede_nome ?? "-";
+            melhorTotal.textContent = fmtMoeda(data.melhor_total);
+        }
+
+        async function renderComparacao(data) {
+            limparDashboard();
+            preencherResumoBase(data);
+            await carregarResumoInteligente(cidadeSelect.value, listaSelect.value);
+            comparacaoSection.classList.remove("hidden");
+
+            for (const unidade of data.unidades) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${unidade.unidade_nome}</td>
+                    <td>${unidade.rede_nome}</td>
+                    <td>${fmtMoeda(unidade.total)}</td>
+                    <td>${unidade.itens_encontrados}</td>
+                    <td>${unidade.itens_faltantes}</td>
+                    <td>${unidade.completo ? "Sim" : "Nao"}</td>
+                `;
+                tbodyComparacao.appendChild(tr);
+            }
+        }
+
+        async function renderOtimizada(data) {
+            limparDashboard();
+            preencherResumoBase(data);
+            await carregarResumoInteligente(cidadeSelect.value, listaSelect.value);
+            comparacaoSection.classList.remove("hidden");
+            otimizadaSection.classList.remove("hidden");
+
+            totalOtimizado.textContent = fmtMoeda(data.total_otimizado);
+            economia.textContent = fmtMoeda(data.economia_vs_melhor_unidade);
+
+            for (const item of data.itens) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.produto_nome}</td>
+                    <td>${item.quantidade}</td>
+                    <td>${item.unidade_nome ?? "-"}</td>
+                    <td>${item.rede_nome ?? "-"}</td>
+                    <td>${fmtMoeda(item.preco_unitario)}</td>
+                    <td>${fmtMoeda(item.subtotal)}</td>
+                `;
+                tbodyOtimizada.appendChild(tr);
+            }
+
+            const cidadeId = cidadeSelect.value;
+            const listaId = listaSelect.value;
+
+            fetch(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`)
+                .then(r => r.json())
+                .then(base => {
+                    for (const unidade of base.unidades) {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${unidade.unidade_nome}</td>
+                            <td>${unidade.rede_nome}</td>
+                            <td>${fmtMoeda(unidade.total)}</td>
+                            <td>${unidade.itens_encontrados}</td>
+                            <td>${unidade.itens_faltantes}</td>
+                            <td>${unidade.completo ? "Sim" : "Nao"}</td>
+                        `;
+                        tbodyComparacao.appendChild(tr);
+                    }
+                })
+                .catch(err => mostrar({ erro: "Falha ao carregar comparacao base.", detalhe: String(err) }));
+        }
+
+        btnCriarUsuario.addEventListener("click", async () => {
+            try {
+                const nome = novoUsuarioNome.value.trim();
+                const email = novoUsuarioEmail.value.trim();
+
+                if (!nome) {
+                    mostrar({ erro: "Informe o nome do usuario." });
+                    return;
+                }
+
+                const payload = { nome, email: email || null };
+                const criado = await fetchJson("/api/usuarios", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                await carregarUsuarios(criado.id);
+                await carregarListasDoUsuario();
+                novoUsuarioNome.value = "";
+                novoUsuarioEmail.value = "";
+
+                mostrar({ status: "ok", mensagem: "Usuario criado com sucesso.", usuario: criado });
+            } catch (err) {
+                mostrar({ erro: "Falha ao criar usuario.", detalhe: String(err) });
+            }
+        });
+
+        btnCriarLista.addEventListener("click", async () => {
+            try {
+                const usuarioId = usuarioSelect.value;
+                const nome = novaListaNome.value.trim();
+
+                if (!usuarioId) {
+                    mostrar({ erro: "Selecione um usuario antes de criar a lista." });
+                    return;
+                }
+
+                if (!nome) {
+                    mostrar({ erro: "Informe o nome da lista." });
+                    return;
+                }
+
+                const criada = await fetchJson("/api/listas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ usuario_id: Number(usuarioId), nome })
+                });
+
+                await carregarListasDoUsuario(criada.id);
+                novaListaNome.value = "";
+
+                mostrar({ status: "ok", mensagem: "Lista criada com sucesso.", lista: criada });
+            } catch (err) {
+                mostrar({ erro: "Falha ao criar lista.", detalhe: String(err) });
+            }
+        });
+
+        btnRecarregarListas.addEventListener("click", async () => {
+            try {
+                await carregarListasDoUsuario();
+                mostrar({ status: "ok", mensagem: "Listas do usuario carregadas." });
+            } catch (err) {
+                mostrar({ erro: "Falha ao carregar listas do usuario.", detalhe: String(err) });
+            }
+        });
+
+        usuarioSelect.addEventListener("change", async () => {
+            try {
+                await carregarListasDoUsuario();
+            } catch (err) {
+                mostrar({ erro: "Falha ao trocar usuario.", detalhe: String(err) });
+            }
+        });
+
+        btnComparar.addEventListener("click", async () => {
+    try {
+        const cidadeId = cidadeSelect.value;
+        const listaId = listaSelect.value;
+
+        const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`);
+
+        await renderComparacao(data);
+        mostrar(data);
+    } catch (err) {
+        mostrar({ erro: "Falha ao comparar cidade.", detalhe: String(err) });
+    }
+});
+            }
+        });
+
+        btnOtimizada.addEventListener("click", async () => {
+            try {
+                const cidadeId = cidadeSelect.value;
+                const listaId = listaSelect.value;
+                const data = await fetchJson(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}`)/lista/${listaId}/otimizada`);
+                renderOtimizada(data);
+                mostrar(data);
+            } catch (err) {
+                mostrar({ erro: "Falha na comparacao otimizada.", detalhe: String(err) });
+            }
+        });
+
+        btnUpload.addEventListener("click", async () => {
+            try {
+                if (!arquivoCsv.files.length) {
+                    mostrar({ erro: "Selecione um arquivo CSV antes de enviar." });
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("arquivo", arquivoCsv.files[0]);
+
+                const resp = await fetch("/api/precos/importar-csv", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await resp.json();
+                mostrar(data);
+            } catch (err) {
+                mostrar({ erro: "Falha no upload do CSV.", detalhe: String(err) });
+            }
+        });
+
+        carregarIniciais();
+</script>
+</body>
+</html>
+
+
+
+
+
