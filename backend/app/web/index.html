@@ -202,6 +202,33 @@
     </div>
 
     <div class="card">
+        <h2>Adicionar itens à lista</h2>
+        <div class="row">
+            <div class="field">
+                <label for="produtoSelect">Produto</label>
+                <select id="produtoSelect"></select>
+            </div>
+            <div class="field">
+                <label for="quantidadeItem">Quantidade</label>
+                <input id="quantidadeItem" type="number" min="1" value="1">
+            </div>
+            <div class="field">
+                <button id="btnAdicionarItem">Adicionar item</button>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyItensLista"></tbody>
+        </table>
+    </div>
+
+    <div class="card">
         <h2>Comparação</h2>
         <div class="row">
             <div class="field">
@@ -324,6 +351,9 @@
         const usuarioSelect = document.getElementById("usuario");
         const cidadeSelect = document.getElementById("cidade");
         const listaSelect = document.getElementById("lista");
+        const produtoSelect = document.getElementById("produtoSelect");
+        const quantidadeItem = document.getElementById("quantidadeItem");
+        const tbodyItensLista = document.getElementById("tbodyItensLista");
 
         const novoUsuarioNome = document.getElementById("novoUsuarioNome");
         const novoUsuarioEmail = document.getElementById("novoUsuarioEmail");
@@ -331,6 +361,7 @@
 
         const btnCriarUsuario = document.getElementById("btnCriarUsuario");
         const btnCriarLista = document.getElementById("btnCriarLista");
+        const btnAdicionarItem = document.getElementById("btnAdicionarItem");
         const btnRecarregar = document.getElementById("btnRecarregar");
         const btnComparar = document.getElementById("btnComparar");
         const btnOtimizada = document.getElementById("btnOtimizada");
@@ -356,6 +387,8 @@
         const otimizadaSection = document.getElementById("otimizadaSection");
         const tbodyComparacao = document.getElementById("tbodyComparacao");
         const tbodyOtimizada = document.getElementById("tbodyOtimizada");
+
+        let produtosCache = [];
 
         function fmtMoeda(v) {
             if (v === null || v === undefined) return "-";
@@ -405,6 +438,19 @@
             await carregarSelect("/api/cidades", cidadeSelect, "nome");
         }
 
+        async function carregarProdutos() {
+            const data = await fetchJson("/api/produtos");
+            produtosCache = Array.isArray(data) ? data : (data.value || []);
+            produtoSelect.innerHTML = "";
+
+            for (const item of produtosCache) {
+                const opt = document.createElement("option");
+                opt.value = item.id;
+                opt.textContent = item.nome;
+                produtoSelect.appendChild(opt);
+            }
+        }
+
         async function carregarListasDoUsuario(listaSelecionada = null) {
             const usuarioId = usuarioSelect.value;
             if (!usuarioId) {
@@ -412,12 +458,35 @@
                 return;
             }
             await carregarSelect(`/api/listas?usuario_id=${usuarioId}`, listaSelect, "nome", listaSelecionada);
+            await carregarItensDaLista();
+        }
+
+        async function carregarItensDaLista() {
+            const listaId = listaSelect.value;
+            tbodyItensLista.innerHTML = "";
+
+            if (!listaId) return;
+
+            const itens = await fetchJson("/api/itens");
+            const listaItens = (Array.isArray(itens) ? itens : (itens.value || []))
+                .filter(i => String(i.lista_id) === String(listaId));
+
+            for (const item of listaItens) {
+                const produto = produtosCache.find(p => String(p.id) === String(item.produto_id));
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${produto ? produto.nome : item.produto_id}</td>
+                    <td>${item.quantidade}</td>
+                `;
+                tbodyItensLista.appendChild(tr);
+            }
         }
 
         async function carregarIniciais() {
             try {
                 await carregarUsuarios();
                 await carregarCidades();
+                await carregarProdutos();
                 await carregarListasDoUsuario();
                 mostrar({ status: "ok", mensagem: "Dados iniciais carregados." });
             } catch (err) {
@@ -601,10 +670,46 @@
             }
         });
 
+        btnAdicionarItem.addEventListener("click", async () => {
+            try {
+                const listaId = listaSelect.value;
+                const produtoId = produtoSelect.value;
+                const quantidade = Number(quantidadeItem.value);
+
+                if (!listaId) {
+                    mostrar({ erro: "Selecione uma lista." });
+                    return;
+                }
+
+                if (!produtoId) {
+                    mostrar({ erro: "Selecione um produto." });
+                    return;
+                }
+
+                const item = await fetchJson("/api/itens", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        lista_id: Number(listaId),
+                        produto_id: Number(produtoId),
+                        quantidade: quantidade
+                    })
+                });
+
+                await carregarItensDaLista();
+                quantidadeItem.value = 1;
+
+                mostrar({ status: "ok", mensagem: "Item adicionado com sucesso.", item });
+            } catch (err) {
+                mostrar({ erro: "Falha ao adicionar item.", detalhe: String(err) });
+            }
+        });
+
         btnRecarregar.addEventListener("click", async () => {
             try {
                 await carregarUsuarios();
                 await carregarCidades();
+                await carregarProdutos();
                 await carregarListasDoUsuario();
                 mostrar({ status: "ok", mensagem: "Dados atualizados." });
             } catch (err) {
@@ -617,6 +722,14 @@
                 await carregarListasDoUsuario();
             } catch (err) {
                 mostrar({ erro: "Falha ao trocar usuario.", detalhe: String(err) });
+            }
+        });
+
+        listaSelect.addEventListener("change", async () => {
+            try {
+                await carregarItensDaLista();
+            } catch (err) {
+                mostrar({ erro: "Falha ao trocar lista.", detalhe: String(err) });
             }
         });
 
