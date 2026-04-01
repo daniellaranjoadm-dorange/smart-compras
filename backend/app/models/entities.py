@@ -10,6 +10,7 @@ class Usuario(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     nome: Mapped[str] = mapped_column(String(120), index=True)
     email: Mapped[str | None] = mapped_column(String(150), unique=True, nullable=True)
+    senha_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
 
 class Estado(Base):
@@ -144,3 +145,4 @@ class HistoricoPreco(Base):
 
     produto = relationship("Produto")
     unidade = relationship("UnidadeMercado")
+

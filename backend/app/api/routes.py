@@ -8,6 +8,7 @@ import io
 
 from app.db.base import Base, engine
 from app.db.session import get_db
+from app.core.security import gerar_hash_senha, verificar_senha
 from app.models.entities import (
     Categoria,
     Cidade,
@@ -66,7 +67,13 @@ router = APIRouter()
 
 @router.post("/usuarios", response_model=UsuarioRead)
 def criar_usuario(payload: UsuarioCreate, db: Session = Depends(get_db)):
-    item = Usuario(**payload.model_dump())
+    dados = payload.model_dump()
+    senha = dados.pop("senha", None)
+
+    item = Usuario(**dados)
+    if senha:
+        item.senha_hash = gerar_hash_senha(senha)
+
     db.add(item)
     try:
         db.commit()
@@ -405,3 +412,4 @@ def resumo_inteligente(cidade_id: int, lista_id: int, db: Session = Depends(get_
     if not resultado:
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
     return resultado
+

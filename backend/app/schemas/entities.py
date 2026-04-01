@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class UsuarioCreate(BaseModel):
     nome: str
     email: str | None = None
+    senha: str | None = None
 
 
 class UsuarioRead(UsuarioCreate):
@@ -212,3 +213,4 @@ class ResumoInteligenteResponse(BaseModel):
     quantidade_mercados_otimizados: int
     vale_dividir_compra: bool
     recomendacao: str
+
