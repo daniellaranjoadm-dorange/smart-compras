@@ -104,14 +104,6 @@
             white-space: pre-wrap;
             word-break: break-word;
         }
-        .good {
-            color: #065f46;
-            font-weight: bold;
-        }
-        .warning {
-            color: #92400e;
-            font-weight: bold;
-        }
         .section-title {
             margin-top: 24px;
         }
@@ -347,6 +339,12 @@
     </div>
 
     <script>
+        const STORAGE_KEYS = {
+            usuarioId: "smart_compras_usuario_id",
+            cidadeId: "smart_compras_cidade_id",
+            listaId: "smart_compras_lista_id"
+        };
+
         const saida = document.getElementById("saida");
         const usuarioSelect = document.getElementById("usuario");
         const cidadeSelect = document.getElementById("cidade");
@@ -390,6 +388,15 @@
 
         let produtosCache = [];
 
+        function salvarPreferencia(chave, valor) {
+            if (valor === null || valor === undefined || valor === "") return;
+            localStorage.setItem(chave, String(valor));
+        }
+
+        function lerPreferencia(chave) {
+            return localStorage.getItem(chave);
+        }
+
         function fmtMoeda(v) {
             if (v === null || v === undefined) return "-";
             return Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -428,14 +435,24 @@
                 }
                 select.appendChild(opt);
             }
+
+            if (!select.value && lista.length > 0) {
+                select.value = String(lista[0].id);
+            }
+
+            return lista;
         }
 
         async function carregarUsuarios(usuarioSelecionado = null) {
-            await carregarSelect("/api/usuarios", usuarioSelect, "nome", usuarioSelecionado);
+            const preferido = usuarioSelecionado ?? lerPreferencia(STORAGE_KEYS.usuarioId);
+            await carregarSelect("/api/usuarios", usuarioSelect, "nome", preferido);
+            salvarPreferencia(STORAGE_KEYS.usuarioId, usuarioSelect.value);
         }
 
-        async function carregarCidades() {
-            await carregarSelect("/api/cidades", cidadeSelect, "nome");
+        async function carregarCidades(cidadeSelecionada = null) {
+            const preferida = cidadeSelecionada ?? lerPreferencia(STORAGE_KEYS.cidadeId);
+            await carregarSelect("/api/cidades", cidadeSelect, "nome", preferida);
+            salvarPreferencia(STORAGE_KEYS.cidadeId, cidadeSelect.value);
         }
 
         async function carregarProdutos() {
@@ -455,9 +472,21 @@
             const usuarioId = usuarioSelect.value;
             if (!usuarioId) {
                 listaSelect.innerHTML = "";
+                tbodyItensLista.innerHTML = "";
                 return;
             }
-            await carregarSelect(`/api/listas?usuario_id=${usuarioId}`, listaSelect, "nome", listaSelecionada);
+
+            const preferida = listaSelecionada ?? lerPreferencia(STORAGE_KEYS.listaId);
+            const listas = await carregarSelect(`/api/listas?usuario_id=${usuarioId}`, listaSelect, "nome", preferida);
+
+            if (listas.length === 0) {
+                listaSelect.innerHTML = "";
+                tbodyItensLista.innerHTML = "";
+                localStorage.removeItem(STORAGE_KEYS.listaId);
+                return;
+            }
+
+            salvarPreferencia(STORAGE_KEYS.listaId, listaSelect.value);
             await carregarItensDaLista();
         }
 
@@ -488,7 +517,7 @@
                 await carregarCidades();
                 await carregarProdutos();
                 await carregarListasDoUsuario();
-                mostrar({ status: "ok", mensagem: "Dados iniciais carregados." });
+                mostrar({ status: "ok", mensagem: "Dados iniciais carregados com preferencias restauradas." });
             } catch (err) {
                 mostrar({ erro: "Falha ao carregar dados iniciais.", detalhe: String(err) });
             }
@@ -634,7 +663,7 @@
                 novoUsuarioNome.value = "";
                 novoUsuarioEmail.value = "";
 
-                mostrar({ status: "ok", mensagem: "Usuario criado com sucesso.", usuario: criado });
+                mostrar({ status: "ok", mensagem: "Usuario criado com sucesso e selecionado automaticamente.", usuario: criado });
             } catch (err) {
                 mostrar({ erro: "Falha ao criar usuario.", detalhe: String(err) });
             }
@@ -662,9 +691,10 @@
                 });
 
                 await carregarListasDoUsuario(criada.id);
+                salvarPreferencia(STORAGE_KEYS.listaId, criada.id);
                 novaListaNome.value = "";
 
-                mostrar({ status: "ok", mensagem: "Lista criada com sucesso.", lista: criada });
+                mostrar({ status: "ok", mensagem: "Lista criada e selecionada automaticamente.", lista: criada });
             } catch (err) {
                 mostrar({ erro: "Falha ao criar lista.", detalhe: String(err) });
             }
@@ -699,7 +729,7 @@
                 await carregarItensDaLista();
                 quantidadeItem.value = 1;
 
-                mostrar({ status: "ok", mensagem: "Item adicionado com sucesso.", item });
+                mostrar({ status: "ok", mensagem: "Item adicionado e tabela atualizada.", item });
             } catch (err) {
                 mostrar({ erro: "Falha ao adicionar item.", detalhe: String(err) });
             }
@@ -707,10 +737,10 @@
 
         btnRecarregar.addEventListener("click", async () => {
             try {
-                await carregarUsuarios();
-                await carregarCidades();
+                await carregarUsuarios(usuarioSelect.value || lerPreferencia(STORAGE_KEYS.usuarioId));
+                await carregarCidades(cidadeSelect.value || lerPreferencia(STORAGE_KEYS.cidadeId));
                 await carregarProdutos();
-                await carregarListasDoUsuario();
+                await carregarListasDoUsuario(listaSelect.value || lerPreferencia(STORAGE_KEYS.listaId));
                 mostrar({ status: "ok", mensagem: "Dados atualizados." });
             } catch (err) {
                 mostrar({ erro: "Falha ao atualizar dados.", detalhe: String(err) });
@@ -719,15 +749,25 @@
 
         usuarioSelect.addEventListener("change", async () => {
             try {
+                salvarPreferencia(STORAGE_KEYS.usuarioId, usuarioSelect.value);
+                localStorage.removeItem(STORAGE_KEYS.listaId);
                 await carregarListasDoUsuario();
+                mostrar({ status: "ok", mensagem: "Usuario alterado e listas recarregadas." });
             } catch (err) {
                 mostrar({ erro: "Falha ao trocar usuario.", detalhe: String(err) });
             }
         });
 
+        cidadeSelect.addEventListener("change", async () => {
+            salvarPreferencia(STORAGE_KEYS.cidadeId, cidadeSelect.value);
+            mostrar({ status: "ok", mensagem: "Cidade salva no navegador." });
+        });
+
         listaSelect.addEventListener("change", async () => {
             try {
+                salvarPreferencia(STORAGE_KEYS.listaId, listaSelect.value);
                 await carregarItensDaLista();
+                mostrar({ status: "ok", mensagem: "Lista alterada e itens recarregados." });
             } catch (err) {
                 mostrar({ erro: "Falha ao trocar lista.", detalhe: String(err) });
             }
