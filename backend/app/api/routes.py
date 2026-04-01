@@ -8,7 +8,7 @@ import io
 
 from app.db.base import Base, engine
 from app.db.session import get_db
-from app.core.security import gerar_hash_senha, verificar_senha
+from app.core.security import criar_access_token, decodificar_access_token, gerar_hash_senha, verificar_senha
 from app.models.entities import (
     Categoria,
     Cidade,
@@ -29,6 +29,8 @@ from app.schemas.entities import (
     CategoriaRead,
     CidadeCreate,
     CidadeRead,
+    LoginRequest,
+    TokenResponse,
     ComparacaoCidadeOtimizadaResponse,
     ComparacaoCidadeResponse,
     EstadoCreate,
@@ -87,6 +89,25 @@ def criar_usuario(payload: UsuarioCreate, db: Session = Depends(get_db)):
 @router.get("/usuarios", response_model=list[UsuarioRead])
 def listar_usuarios(db: Session = Depends(get_db)):
     return db.query(Usuario).order_by(Usuario.nome).all()
+
+
+@router.post("/login", response_model=TokenResponse)
+def login(payload: LoginRequest, db: Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.email == payload.email).first()
+
+    if not usuario or not usuario.senha_hash:
+        raise HTTPException(status_code=401, detail="Credenciais invalidas.")
+
+    if not verificar_senha(payload.senha, usuario.senha_hash):
+        raise HTTPException(status_code=401, detail="Credenciais invalidas.")
+
+    token = criar_access_token({
+        "sub": str(usuario.id),
+        "email": usuario.email,
+        "nome": usuario.nome,
+    })
+
+    return {"access_token": token, "token_type": "bearer"}
 
 
 @router.post("/estados", response_model=EstadoRead)
@@ -412,4 +433,5 @@ def resumo_inteligente(cidade_id: int, lista_id: int, db: Session = Depends(get_
     if not resultado:
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
     return resultado
+
 

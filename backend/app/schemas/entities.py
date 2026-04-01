@@ -3,14 +3,26 @@
 from pydantic import BaseModel, ConfigDict
 
 
+class LoginRequest(BaseModel):
+    email: str
+    senha: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
 class UsuarioCreate(BaseModel):
     nome: str
     email: str | None = None
     senha: str | None = None
 
 
-class UsuarioRead(UsuarioCreate):
+class UsuarioRead(BaseModel):
     id: int
+    nome: str
+    email: str | None = None
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -213,4 +225,3 @@ class ResumoInteligenteResponse(BaseModel):
     quantidade_mercados_otimizados: int
     vale_dividir_compra: bool
     recomendacao: str
-
