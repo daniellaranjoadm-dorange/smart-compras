@@ -2,18 +2,25 @@
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from sqlalchemy import text
 
 from app.api.routes import router
-from app.db.base import Base, engine
+from app.db.base import engine
+from app.models.entities import Base
 
 app = FastAPI(title="Smart Compras API", version="0.1.0")
-
-Base.metadata.create_all(bind=engine)
 
 app.include_router(router, prefix="/api")
 
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
+
+
+@app.on_event("startup")
+def on_startup():
+    with engine.begin() as conn:
+        conn.execute(text("DROP TABLE IF EXISTS usuarios CASCADE"))
+    Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
