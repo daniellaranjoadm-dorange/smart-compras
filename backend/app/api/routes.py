@@ -9,6 +9,7 @@ import io
 from app.db.base import Base, engine
 from app.db.session import get_db
 from app.core.security import criar_access_token, decodificar_access_token, gerar_hash_senha, verificar_senha
+from app.core.deps import get_current_user
 from app.models.entities import (
     Categoria,
     Cidade,
@@ -214,11 +215,13 @@ def criar_lista_modelo(payload: ListaModeloCreate, db: Session = Depends(get_db)
 
 
 @router.get("/listas-modelo", response_model=list[ListaModeloRead])
-def listar_listas_modelo(db: Session = Depends(get_db), usuario_id: int | None = None):
-    query = db.query(ListaModelo)
-    if usuario_id is not None:
-        query = query.filter(ListaModelo.usuario_id == usuario_id)
-    return query.order_by(ListaModelo.nome).all()
+def listar_listas_modelo(
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    return db.query(ListaModelo).filter(
+        ListaModelo.usuario_id == usuario.id
+    ).order_by(ListaModelo.nome).all()
 
 
 @router.post("/itens-lista-modelo", response_model=ItemListaModeloRead)
@@ -231,16 +234,31 @@ def criar_item_lista_modelo(payload: ItemListaModeloCreate, db: Session = Depend
 
 
 @router.get("/itens-lista-modelo", response_model=list[ItemListaModeloRead])
-def listar_itens_lista_modelo(db: Session = Depends(get_db), lista_modelo_id: int | None = None):
-    query = db.query(ItemListaModelo)
+def listar_itens_lista_modelo(
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user),
+    lista_modelo_id: int | None = None
+):
+    query = db.query(ItemListaModelo).join(
+    ListaModelo, ItemListaModelo.lista_modelo_id == ListaModelo.id
+).filter(
+    ListaModelo.usuario_id == usuario.id
+)
     if lista_modelo_id is not None:
         query = query.filter(ItemListaModelo.lista_modelo_id == lista_modelo_id)
     return query.all()
 
 
 @router.post("/listas", response_model=ListaCompraRead)
-def criar_lista(payload: ListaCompraCreate, db: Session = Depends(get_db)):
-    item = ListaCompra(**payload.model_dump())
+def criar_lista(
+    payload: ListaCompraCreate,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    dados = payload.model_dump()
+    dados["usuario_id"] = usuario.id
+
+    item = ListaCompra(**dados)
     db.add(item)
     db.commit()
     db.refresh(item)
@@ -248,16 +266,21 @@ def criar_lista(payload: ListaCompraCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/listas", response_model=list[ListaCompraRead])
-def listar_listas(db: Session = Depends(get_db), usuario_id: int | None = None):
-    query = db.query(ListaCompra)
-    if usuario_id is not None:
-        query = query.filter(ListaCompra.usuario_id == usuario_id)
-    return query.order_by(ListaCompra.nome).all()
+def listar_listas(
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    return db.query(ListaCompra).filter(
+        ListaCompra.usuario_id == usuario.id
+    ).order_by(ListaCompra.nome).all()
 
 
 @router.post("/listas-modelo/{lista_modelo_id}/gerar", response_model=ListaCompraRead)
 def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
-    modelo = db.query(ListaModelo).filter(ListaModelo.id == lista_modelo_id).first()
+    modelo = db.query(ListaModelo).filter(
+    ListaModelo.id == lista_modelo_id,
+    ListaModelo.usuario_id == usuario.id
+).first()
     if not modelo:
         raise HTTPException(status_code=404, detail="Lista modelo nao encontrada.")
 
@@ -290,7 +313,19 @@ def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/itens", response_model=ItemListaCompraRead)
-def criar_item(payload: ItemListaCompraCreate, db: Session = Depends(get_db)):
+def criar_item(
+    payload: ItemListaCompraCreate,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    lista = db.query(ListaCompra).filter(
+        ListaCompra.id == payload.lista_id,
+        ListaCompra.usuario_id == usuario.id
+    ).first()
+
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista nao encontrada")
+
     item = ItemListaCompra(**payload.model_dump())
     db.add(item)
     db.commit()
@@ -299,8 +334,15 @@ def criar_item(payload: ItemListaCompraCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/itens", response_model=list[ItemListaCompraRead])
-def listar_itens(db: Session = Depends(get_db)):
-    return db.query(ItemListaCompra).all()
+def listar_itens(
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    return db.query(ItemListaCompra).join(
+        ListaCompra, ItemListaCompra.lista_id == ListaCompra.id
+    ).filter(
+        ListaCompra.usuario_id == usuario.id
+    ).all()
 
 
 @router.post("/precos", response_model=PrecoProdutoRead)
@@ -412,7 +454,20 @@ def listar_historico_precos(db: Session = Depends(get_db)):
 
 
 @router.get("/comparacao/cidade/{cidade_id}/lista/{lista_id}", response_model=ComparacaoCidadeResponse)
-def comparar_por_cidade(cidade_id: int, lista_id: int, db: Session = Depends(get_db)):
+def comparar_por_cidade(
+    cidade_id: int,
+    lista_id: int,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    lista = db.query(ListaCompra).filter(
+        ListaCompra.id == lista_id,
+        ListaCompra.usuario_id == usuario.id
+    ).first()
+
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista nao encontrada.")
+
     resultado = comparar_lista_por_cidade(db, lista_id, cidade_id)
     if not resultado["lista_nome"]:
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
@@ -420,7 +475,20 @@ def comparar_por_cidade(cidade_id: int, lista_id: int, db: Session = Depends(get
 
 
 @router.get("/comparacao/cidade/{cidade_id}/lista/{lista_id}/otimizada", response_model=ComparacaoCidadeOtimizadaResponse)
-def comparar_por_cidade_otimizada(cidade_id: int, lista_id: int, db: Session = Depends(get_db)):
+def comparar_por_cidade_otimizada(
+    cidade_id: int,
+    lista_id: int,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    lista = db.query(ListaCompra).filter(
+        ListaCompra.id == lista_id,
+        ListaCompra.usuario_id == usuario.id
+    ).first()
+
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista nao encontrada.")
+
     resultado = comparar_lista_otimizada_por_cidade(db, lista_id, cidade_id)
     if not resultado["lista_nome"]:
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
@@ -428,10 +496,22 @@ def comparar_por_cidade_otimizada(cidade_id: int, lista_id: int, db: Session = D
 
 
 @router.get("/resumo/cidade/{cidade_id}/lista/{lista_id}", response_model=ResumoInteligenteResponse)
-def resumo_inteligente(cidade_id: int, lista_id: int, db: Session = Depends(get_db)):
+def resumo_inteligente(
+    cidade_id: int,
+    lista_id: int,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    lista = db.query(ListaCompra).filter(
+        ListaCompra.id == lista_id,
+        ListaCompra.usuario_id == usuario.id
+    ).first()
+
+    if not lista:
+        raise HTTPException(status_code=404, detail="Lista nao encontrada.")
+
     resultado = gerar_resumo_inteligente_compra(db, lista_id, cidade_id)
     if not resultado:
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
     return resultado
-
 
