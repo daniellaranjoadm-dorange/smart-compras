@@ -1,18 +1,35 @@
-﻿.venv/
+﻿# Python
 __pycache__/
 *.pyc
 *.pyo
-*.db-journal
-*.db-wal
-*.db-shm
-backups/
-backend/app.db
-backend/app_backup_*.db
-
-*.csv
-
-backend/.env
-
-backend/app.db
+*.pyd
 .venv/
-__pycache__/
+.env
+
+# DB local
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Debug scripts temporarios
+corrige_coluna.py
+corrige_e_verifica.py
+testa_conexao.py
+verifica_colunas.py
+backend/*fix*.py
+backend/corrige_front_auth.py
+backend/hide_auth.py
+backend/lock_app.py
+backend/toggle_auth.py
+backend/troca_fetch_auth.py
+backend/injeta_auth_helpers.py
+backend/adiciona_barra_auth.py
+backend/aplica_guard_auth.py
+backend/remove_admin_main.py
+backend/registrar_admin.py
+
+# Backup html
+backend/app/web/index_backup_auth_ok.html
