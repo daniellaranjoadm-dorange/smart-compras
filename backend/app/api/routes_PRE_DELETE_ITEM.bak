@@ -550,19 +550,3 @@ def buscar_produtos(q: str = "", limit: int = 20, db: Session = Depends(get_db))
         }
         for p in produtos
     ]
-
-
-@router.delete("/itens/{item_id}")
-def deletar_item(item_id: int, db: Session = Depends(get_db), usuario=Depends(get_current_user)):
-    item = db.query(ItemListaCompra).join(ListaCompra, ItemListaCompra.lista_id == ListaCompra.id).filter(
-        ItemListaCompra.id == item_id,
-        ListaCompra.usuario_id == usuario.id
-    ).first()
-
-    if not item:
-        raise HTTPException(status_code=404, detail="Item nao encontrado")
-
-    db.delete(item)
-    db.commit()
-    return {"ok": True, "message": "Item removido com sucesso"}
-

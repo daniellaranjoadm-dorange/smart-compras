@@ -63,22 +63,6 @@
       margin-top: 8px;
       background: #fafafa;
     }
-    .item-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .btn-remover-item {
-      width: auto;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 8px;
-      background: #b91c1c;
-      color: white;
-      cursor: pointer;
-      font-size: 12px;
-    }
     .produto-nome {
       font-weight: bold;
       margin-bottom: 4px;
@@ -423,37 +407,9 @@
         const div = document.createElement("div");
         div.className = "item";
         div.innerHTML =
-          "<div class='item-top'>" +
-            "<div>" +
-              "<strong>Produto:</strong> " + getProdutoNome(item.produto_id) + "<br>" +
-              "<strong>Quantidade:</strong> " + item.quantidade +
-            "</div>" +
-            "<button class='btn-remover-item' data-item-id='" + item.id + "'>Remover</button>" +
-          "</div>";
+          "<strong>Produto:</strong> " + getProdutoNome(item.produto_id) + "<br>" +
+          "<strong>Quantidade:</strong> " + item.quantidade;
         output.appendChild(div);
-      });
-
-      output.querySelectorAll(".btn-remover-item").forEach(function(btn) {
-        btn.addEventListener("click", async function() {
-          const itemId = this.getAttribute("data-item-id");
-          if (!confirm("Remover este item?")) return;
-
-          try {
-            const response = await apiFetch(API_BASE + "/itens/" + itemId, {
-              method: "DELETE"
-            });
-
-            if (!response.ok) {
-              let data = null;
-              try { data = await response.json(); } catch (e) {}
-              throw new Error(getErrorMessage(data, "Erro ao remover item"));
-            }
-
-            await carregarItens();
-          } catch (error) {
-            alert(error.message || "Erro ao remover item");
-          }
-        });
       });
     }
 

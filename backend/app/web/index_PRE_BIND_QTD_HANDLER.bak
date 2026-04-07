@@ -426,7 +426,10 @@
           "<div class='item-top'>" +
             "<div>" +
               "<strong>Produto:</strong> " + getProdutoNome(item.produto_id) + "<br>" +
-              "<strong>Quantidade:</strong> " + item.quantidade +
+              "<strong>Quantidade:</strong>
+        <button class='btn-qtd' data-id='" + item.id + "' data-action='dec'>-</button>
+        <span id='qtd-" + item.id + "'>" + item.quantidade + "</span>
+        <button class='btn-qtd' data-id='" + item.id + "' data-action='inc'>+</button> +
             "</div>" +
             "<button class='btn-remover-item' data-item-id='" + item.id + "'>Remover</button>" +
           "</div>";
