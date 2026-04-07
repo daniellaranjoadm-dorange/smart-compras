@@ -1,0 +1,2263 @@
+{
+  "pageProps": {
+    "cmsPlp": null,
+    "cmsProductListLandingPage": {
+      "id": "caa9b59b-fd1b-4de6-a08d-f41ce4fa0ab7",
+      "name": "Catálogo",
+      "type": "productListLandingPage",
+      "status": "published",
+      "versionId": "47801de6-d176-4b30-a4f1-56bb5ea41446",
+      "versionStatus": "published",
+      "sections": [],
+      "parameters": {
+        "productListLandingPageParams": {
+          "orderBy": "OrderByScoreDESC",
+          "path": "/catalogo",
+          "collection": "312"
+        }
+      },
+      "seo": {
+        "siteMetadataWithSlug": {
+          "description": " Faça suas compras de mercado online com preço de atacado. Economize para sua casa ou seu negócio no maior atacadista do Brasil. Confira!",
+          "title": "Catálogo Atacadão",
+          "titleTemplate": "Catálogo Atacadão"
+        },
+        "openGraph": {
+          "title": "Catálogo Atacadão",
+          "description": "Catálogo Atacadão"
+        }
+      }
+    },
+    "meta": null,
+    "cmsSeo": {
+      "id": "b3c33a60-0624-463e-a318-04a314162b88",
+      "name": "SEO e Hotbar",
+      "type": "seo",
+      "status": "published",
+      "versionId": "c1249747-8053-41be-83a6-2aee47763908",
+      "versionStatus": "published",
+      "sections": [
+        {
+          "id": "1697543798050",
+          "name": "Menu",
+          "data": {
+            "menuItems": [
+              {
+                "featured": false,
+                "title": "Cervejas",
+                "href": "/bebidas/cervejas"
+              },
+              {
+                "featured": false,
+                "title": "Biscoitos",
+                "href": "/mercearia/biscoitos"
+              },
+              {
+                "featured": false,
+                "title": "Limpeza",
+                "href": "/limpeza"
+              },
+              {
+                "featured": false,
+                "title": "Chocolates",
+                "href": "/mercearia/chocolates"
+              },
+              {
+                "featured": false,
+                "title": "Higiene",
+                "href": "/higiene-e-perfumaria"
+              },
+              {
+                "featured": false,
+                "title": "Bebês",
+                "href": "/higiene-e-perfumaria/bebes"
+              },
+              {
+                "featured": false,
+                "title": "Leites",
+                "href": "/padaria-e-matinais/leites"
+              },
+              {
+                "featured": false,
+                "title": "Cafés",
+                "href": "/cafes-chas-e-achocolatados"
+              },
+              {
+                "featured": true,
+                "title": "Super Ofertas",
+                "href": "/catalogo",
+                "menuItemTextColor": "#000000"
+              }
+            ]
+          }
+        }
+      ],
+      "seo": {
+        "siteMetadataWithSlug": {
+          "title": "Atacadão: Suas compras de supermercado online com preço de atacado!",
+          "description": " Bem-vindo ao seu Parceirão Online! Aqui, você encontra a combinação perfeita de economia, variedade e qualidade, seja para abastecer o seu negócio ou a despensa da sua casa. Acesse atacadao.com.br e confira!   ",
+          "titleTemplate": "%s | Atacadão"
+        },
+        "openGraph": {
+          "title": "Seu Parceirão Online",
+          "description": "Bem-vindo ao seu Parceirão Online! Aqui, você encontra a combinação perfeita de economia, variedade e qualidade, seja para abastecer o seu negócio ou a despensa da sua casa. Acesse atacadao.com.br e confira!   ",
+          "thumbnail": "https://atacadaobr.vtexassets.com/assets/vtex.file-manager-graphql/images/5e77c8f1-e101-4bbf-ae30-6ae6865fa796___5c9cfa46889c649c4c7f1d67eb433b4e.png"
+        }
+      }
+    },
+    "cmsMenuCategory": {
+      "id": "7e433bf4-d919-4b25-8a93-f1d37124fd5d",
+      "name": "Todos os Departamentos",
+      "type": "menuCategory",
+      "status": "published",
+      "versionId": "79813d3f-db71-496f-9a88-4ae8dd3bed53",
+      "versionStatus": "published",
+      "sections": [],
+      "menu": {
+        "menuCategories": {
+          "menuItems": [
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Água com gás",
+                      "href": "/bebidas/aguas/agua-com-gas"
+                    },
+                    {
+                      "name": "Água sem gás",
+                      "href": "/bebidas/aguas/agua-sem-gas"
+                    },
+                    {
+                      "name": "Água de coco",
+                      "href": "/bebidas/aguas/agua-de-coco"
+                    },
+                    {
+                      "name": "Tônica e saborizada",
+                      "href": "/bebidas/aguas/tonica-e-saborizada"
+                    }
+                  ],
+                  "name": "Águas",
+                  "href": "/bebidas/aguas"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Cerveja pilsen",
+                      "href": "/bebidas/cervejas/cerveja-pilsen"
+                    },
+                    {
+                      "name": "Cerveja puro malte",
+                      "href": "/bebidas/cervejas/cerveja-puro-malte"
+                    },
+                    {
+                      "name": "Cerveja especial",
+                      "href": "/bebidas/cervejas/cerveja-especial"
+                    },
+                    {
+                      "name": "Cerveja artesanal",
+                      "href": "/bebidas/cervejas/cerveja-artesanal"
+                    },
+                    {
+                      "name": "Cerveja IPA",
+                      "href": "/bebidas/cervejas/cerveja-ipa"
+                    },
+                    {
+                      "name": "Cerveja sem álcool",
+                      "href": "/bebidas/cervejas/cerveja-sem-alcool"
+                    }
+                  ],
+                  "name": "Cervejas",
+                  "href": "/bebidas/cervejas"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Champanhe importado",
+                      "href": "/bebidas/champanhes-espumantes-e-sidras/champanhe-importado"
+                    },
+                    {
+                      "name": "Champanhe nacional",
+                      "href": "/bebidas/champanhes-espumantes-e-sidras/champanhe-nacional"
+                    },
+                    {
+                      "name": "Espumante importado",
+                      "href": "/bebidas/champanhes-espumantes-e-sidras/espumante-importado"
+                    },
+                    {
+                      "name": "Espumante nacional",
+                      "href": "/bebidas/champanhes-espumantes-e-sidras/espumante-nacional"
+                    }
+                  ],
+                  "name": "Champanhes, espumantes e sidras",
+                  "href": "/bebidas/champanhes-espumantes-e-sidras"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Chá branco",
+                      "href": "/bebidas/chas-prontos/cha-branco"
+                    },
+                    {
+                      "name": "Chá capim limão",
+                      "href": "/bebidas/chas-prontos/cha-capim-limao"
+                    },
+                    {
+                      "name": "Chá de hibisco",
+                      "href": "/bebidas/chas-prontos/cha-de-hibisco"
+                    },
+                    {
+                      "name": "Chá mate",
+                      "href": "/bebidas/chas-prontos/cha-mate"
+                    },
+                    {
+                      "name": "Chá preto",
+                      "href": "/bebidas/chas-prontos/cha-preto"
+                    },
+                    {
+                      "name": "Chá verde",
+                      "href": "/bebidas/chas-prontos/cha-verde"
+                    }
+                  ],
+                  "name": "Chás prontos",
+                  "href": "/bebidas/chas-prontos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bebida mista",
+                      "href": "/bebidas/coqueteis/bebida-mista"
+                    },
+                    {
+                      "name": "Catuaba",
+                      "href": "/bebidas/coqueteis/catuaba"
+                    },
+                    {
+                      "name": "Conhaque",
+                      "href": "/bebidas/coqueteis/conhaque"
+                    },
+                    {
+                      "name": "Licor",
+                      "href": "/bebidas/coqueteis/licor"
+                    },
+                    {
+                      "name": "Rum",
+                      "href": "/bebidas/coqueteis/rum"
+                    }
+                  ],
+                  "name": "Coquetéis",
+                  "href": "/bebidas/coqueteis"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Aguardente",
+                      "href": "/bebidas/destilados/aguardente"
+                    },
+                    {
+                      "name": "Aperitivo",
+                      "href": "/bebidas/destilados/aperitivo"
+                    },
+                    {
+                      "name": "Corote",
+                      "href": "/bebidas/destilados/corote"
+                    },
+                    {
+                      "name": "Gin",
+                      "href": "/bebidas/destilados/gin"
+                    },
+                    {
+                      "name": "Ingredientes para drinks",
+                      "href": "/bebidas/destilados/ingredientes-para-drinks"
+                    },
+                    {
+                      "name": "Saquê",
+                      "href": "/bebidas/destilados/saque"
+                    },
+                    {
+                      "name": "Tequila",
+                      "href": "/bebidas/destilados/tequila"
+                    },
+                    {
+                      "name": "Vermouth e steinhager",
+                      "href": "/bebidas/destilados/vermouth-e-steinhager"
+                    },
+                    {
+                      "name": "Vodka",
+                      "href": "/bebidas/destilados/vodka"
+                    }
+                  ],
+                  "name": "Destilados",
+                  "href": "/bebidas/destilados"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Energético",
+                      "href": "/bebidas/energeticos-e-isotonicos/energetico"
+                    },
+                    {
+                      "name": "Isotônico",
+                      "href": "/bebidas/energeticos-e-isotonicos/isotonico"
+                    }
+                  ],
+                  "name": "Energéticos e isotônicos",
+                  "href": "/bebidas/energeticos-e-isotonicos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Refrigerante cola",
+                      "href": "/bebidas/refrigerantes/refrigerante-cola"
+                    },
+                    {
+                      "name": "Refrigerante guaraná",
+                      "href": "/bebidas/refrigerantes/refrigerante-guarana"
+                    },
+                    {
+                      "name": "Refrigerante de sabor",
+                      "href": "/bebidas/refrigerantes/refrigerante-de-sabor"
+                    },
+                    {
+                      "name": "Refrigerante sem açucar",
+                      "href": "/bebidas/refrigerantes/refrigerante-sem-acucar"
+                    }
+                  ],
+                  "name": "Refrigerantes",
+                  "href": "/bebidas/refrigerantes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bebida de amêndoa",
+                      "href": "/bebidas/sucos-e-refrescos/bebida-de-amendoa"
+                    },
+                    {
+                      "name": "Bebida de castanha",
+                      "href": "/bebidas/sucos-e-refrescos/bebida-de-castanha"
+                    },
+                    {
+                      "name": "Bebida de soja",
+                      "href": "/bebidas/sucos-e-refrescos/bebida-de-soja"
+                    },
+                    {
+                      "name": "Refresco em pó",
+                      "href": "/bebidas/sucos-e-refrescos/refresco-em-po"
+                    },
+                    {
+                      "name": "Suco concentrado",
+                      "href": "/bebidas/sucos-e-refrescos/suco-concentrado"
+                    },
+                    {
+                      "name": "Suco integral",
+                      "href": "/bebidas/sucos-e-refrescos/suco-integral"
+                    },
+                    {
+                      "name": "Suco pronto",
+                      "href": "/bebidas/sucos-e-refrescos/suco-pronto"
+                    },
+                    {
+                      "name": "Suco refrigerado",
+                      "href": "/bebidas/sucos-e-refrescos/suco-refrigerado"
+                    },
+                    {
+                      "name": "Xarope de guaraná e groselha",
+                      "href": "/bebidas/sucos-e-refrescos/xarope-de-guarana-e-groselha"
+                    }
+                  ],
+                  "name": "Sucos e refrescos",
+                  "href": "/bebidas/sucos-e-refrescos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Chopp de vinho",
+                      "href": "/bebidas/vinhos/chopp-de-vinho"
+                    },
+                    {
+                      "name": "Coquetel de vinho",
+                      "href": "/bebidas/vinhos/coquetel-de-vinho"
+                    },
+                    {
+                      "name": "Vinho importado",
+                      "href": "/bebidas/vinhos/vinho-importado"
+                    },
+                    {
+                      "name": "Vinho nacional",
+                      "href": "/bebidas/vinhos/vinho-nacional"
+                    }
+                  ],
+                  "name": "Vinhos",
+                  "href": "/bebidas/vinhos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Whisky",
+                      "href": "/bebidas/whiskies/whisky"
+                    }
+                  ],
+                  "name": "Whiskies",
+                  "href": "/bebidas/whiskies"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Bebidas",
+              "href": "/bebidas"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Açucar",
+                      "href": "/mercearia/acucar-e-adocantes/acucar"
+                    },
+                    {
+                      "name": "Adoçante",
+                      "href": "/mercearia/acucar-e-adocantes/adocante"
+                    }
+                  ],
+                  "name": "Açúcar e adoçantes",
+                  "href": "/mercearia/acucar-e-adocantes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Alimento infantil diversos",
+                      "href": "/mercearia/alimento-infantil/alimento-infantil-diversos"
+                    }
+                  ],
+                  "name": "Alimento infantil",
+                  "href": "/mercearia/alimento-infantil"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Azeite",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/azeite"
+                    },
+                    {
+                      "name": "Óleo composto",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-composto"
+                    },
+                    {
+                      "name": "Óleo de algodão",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-algodao"
+                    },
+                    {
+                      "name": "Óleo de canola",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-canola"
+                    },
+                    {
+                      "name": "Óleo de coco",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-coco"
+                    },
+                    {
+                      "name": "Óleo de girassol",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-girassol"
+                    },
+                    {
+                      "name": "Óleo de milho",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-milho"
+                    },
+                    {
+                      "name": "Óleo de soja",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-de-soja"
+                    },
+                    {
+                      "name": "Óleo emulsificante",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/oleo-emulsificante"
+                    },
+                    {
+                      "name": "Vinagre e aceto balsamico",
+                      "href": "/mercearia/azeites-oleos-e-vinagres/vinagre-e-aceto-balsamico"
+                    }
+                  ],
+                  "name": "Azeites, óleos e vinagres",
+                  "href": "/mercearia/azeites-oleos-e-vinagres"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Biscoito de maizena",
+                      "href": "/mercearia/biscoitos/biscoito-de-maizena"
+                    },
+                    {
+                      "name": "Biscoito doce",
+                      "href": "/mercearia/biscoitos/biscoito-doce"
+                    },
+                    {
+                      "name": "Biscoito integral",
+                      "href": "/mercearia/biscoitos/biscoito-integral"
+                    },
+                    {
+                      "name": "Biscoito recheado",
+                      "href": "/mercearia/biscoitos/biscoito-recheado"
+                    },
+                    {
+                      "name": "Biscoito salgado",
+                      "href": "/mercearia/biscoitos/biscoito-salgado"
+                    },
+                    {
+                      "name": "Biscoito waffer",
+                      "href": "/mercearia/biscoitos/biscoito-waffer"
+                    },
+                    {
+                      "name": "Cookies",
+                      "href": "/mercearia/biscoitos/cookies"
+                    }
+                  ],
+                  "name": "Biscoitos",
+                  "href": "/mercearia/biscoitos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bala",
+                      "href": "/mercearia/bomboniere/bala"
+                    },
+                    {
+                      "name": "Confeito",
+                      "href": "/mercearia/bomboniere/confeito"
+                    },
+                    {
+                      "name": "Goma de mascar",
+                      "href": "/mercearia/bomboniere/goma-de-mascar"
+                    },
+                    {
+                      "name": "Pirulito",
+                      "href": "/mercearia/bomboniere/pirulito"
+                    }
+                  ],
+                  "name": "Bomboniere",
+                  "href": "/mercearia/bomboniere"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Achocolatado em pó",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/achocolatado-em-po"
+                    },
+                    {
+                      "name": "Café em grãos",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/cafe-em-graos"
+                    },
+                    {
+                      "name": "Café solúvel",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/cafe-soluvel"
+                    },
+                    {
+                      "name": "Café torrado e moído",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/cafe-torrado-e-moido"
+                    },
+                    {
+                      "name": "Cappuccino",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/cappuccino"
+                    },
+                    {
+                      "name": "Cápsula",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/capsula"
+                    },
+                    {
+                      "name": "Chá",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/cha"
+                    },
+                    {
+                      "name": "Filtro de papel",
+                      "href": "/mercearia/cafes-chas-e-achocolatados/filtro-de-papel"
+                    }
+                  ],
+                  "name": "Cafés, chás e achocolatados",
+                  "href": "/cafes-chas-e-achocolatados "
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Barra de chocolate",
+                      "href": "/mercearia/chocolates/barra-de-chocolate"
+                    },
+                    {
+                      "name": "Bombom",
+                      "href": "/mercearia/chocolates/bombom"
+                    },
+                    {
+                      "name": "Gota e pedaço",
+                      "href": "/mercearia/chocolates/gota-e-pedaco"
+                    },
+                    {
+                      "name": "Coberturas, cremes e recheios",
+                      "href": "/mercearia/coberturas-cremes-e-recheios"
+                    },
+                    {
+                      "name": "Cobertura",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/cobertura"
+                    },
+                    {
+                      "name": "Creme de avelã",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/creme-de-avela"
+                    },
+                    {
+                      "name": "Essências",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/essencias"
+                    },
+                    {
+                      "name": "Pasta de amendoim",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/pasta-de-amendoim"
+                    },
+                    {
+                      "name": "Pasta de chocolate",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/pasta-de-chocolate"
+                    },
+                    {
+                      "name": "Recheio",
+                      "href": "/mercearia/coberturas-cremes-e-recheios/recheio"
+                    },
+                    {
+                      "name": "Ovo de páscoa",
+                      "href": "/mercearia/chocolates/ovo-de-pascoa"
+                    }
+                  ],
+                  "name": "Chocolates",
+                  "href": "/mercearia/chocolates"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Chocolate em pó e granulado",
+                      "href": "/mercearia/confeitaria/chocolate-em-po-e-granulado"
+                    },
+                    {
+                      "name": "Creme culinário e de leite",
+                      "href": "/mercearia/confeitaria/creme-culinario-e-de-leite"
+                    },
+                    {
+                      "name": "Doce para enrolar",
+                      "href": "/mercearia/confeitaria/doce-para-enrolar"
+                    },
+                    {
+                      "name": "Fermento",
+                      "href": "/mercearia/confeitaria/fermento"
+                    },
+                    {
+                      "name": "Gelatina",
+                      "href": "/mercearia/confeitaria/gelatina"
+                    },
+                    {
+                      "name": "Glicose",
+                      "href": "/mercearia/confeitaria/glicose"
+                    },
+                    {
+                      "name": "Leite condensado e mistura láctea",
+                      "href": "/mercearia/confeitaria/leite-condensado-e-mistura-lactea"
+                    },
+                    {
+                      "name": "Leite de coco e coco ralado",
+                      "href": "/mercearia/confeitaria/leite-de-coco-e-coco-ralado"
+                    },
+                    {
+                      "name": "Mistura de bolo, mousse e pudim",
+                      "href": "/mercearia/confeitaria/mistura-de-bolo-mousse-e-pudim"
+                    },
+                    {
+                      "name": "Sagu",
+                      "href": "/mercearia/confeitaria/sagu"
+                    },
+                    {
+                      "name": "Sorvete e acompanhamentos",
+                      "href": "/mercearia/confeitaria/sorvete-e-acompanhamentos"
+                    }
+                  ],
+                  "name": "Confeitaria",
+                  "href": "/mercearia/confeitaria"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Atum e sardinha",
+                      "href": "/mercearia/conservas-e-enlatados/atum-e-sardinha"
+                    },
+                    {
+                      "name": "Azeitona",
+                      "href": "/mercearia/conservas-e-enlatados/azeitona"
+                    },
+                    {
+                      "name": "Cogumelo",
+                      "href": "/mercearia/conservas-e-enlatados/cogumelo"
+                    },
+                    {
+                      "name": "Demais conservas",
+                      "href": "/mercearia/conservas-e-enlatados/demais-conservas"
+                    },
+                    {
+                      "name": "Ervilha",
+                      "href": "/mercearia/conservas-e-enlatados/ervilha"
+                    },
+                    {
+                      "name": "Milho verde",
+                      "href": "/mercearia/conservas-e-enlatados/milho-verde"
+                    },
+                    {
+                      "name": "Palmito",
+                      "href": "/mercearia/conservas-e-enlatados/palmito"
+                    }
+                  ],
+                  "name": "Conservas e enlatados",
+                  "href": "/mercearia/conservas-e-enlatados"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Doce de batata doce",
+                      "href": "/mercearia/doces/doce-de-batata-doce"
+                    },
+                    {
+                      "name": "Doce de fruta",
+                      "href": "/mercearia/doces/doce-de-fruta"
+                    },
+                    {
+                      "name": "Fruta em calda",
+                      "href": "/mercearia/doces/fruta-em-calda"
+                    },
+                    {
+                      "href": "/mercearia/doces/pao-de-mel",
+                      "name": "Pão de mel"
+                    }
+                  ],
+                  "name": "Doces",
+                  "href": "/mercearia/doces"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Amido de milho",
+                      "href": "/mercearia/farinhas/amido-de-milho"
+                    },
+                    {
+                      "name": "Cevada",
+                      "href": "/mercearia/farinhas/cevada"
+                    },
+                    {
+                      "name": "Farinha de mandioca",
+                      "href": "/mercearia/farinhas/farinha-de-mandioca"
+                    },
+                    {
+                      "name": "Farinha de milho",
+                      "href": "/mercearia/farinhas/farinha-de-milho"
+                    },
+                    {
+                      "name": "Farinha de rosca",
+                      "href": "/mercearia/farinhas/farinha-de-rosca"
+                    },
+                    {
+                      "name": "Farinha de trigo integral",
+                      "href": "/mercearia/farinhas/farinha-de-trigo-integral"
+                    },
+                    {
+                      "name": "Farinha de trigo tradicional",
+                      "href": "/mercearia/farinhas/farinha-de-trigo-tradicional"
+                    },
+                    {
+                      "name": "Farinha especial",
+                      "href": "/mercearia/farinhas/farinha-especial"
+                    },
+                    {
+                      "name": "Farofa",
+                      "href": "/mercearia/farinhas/farofa"
+                    },
+                    {
+                      "name": "Fécula de mandioca",
+                      "href": "/mercearia/farinhas/fecula-de-mandioca"
+                    },
+                    {
+                      "name": "Floco de arroz",
+                      "href": "/mercearia/farinhas/floco-de-arroz"
+                    },
+                    {
+                      "name": "Polvilho",
+                      "href": "/mercearia/farinhas/polvilho"
+                    },
+                    {
+                      "name": "Tapioca",
+                      "href": "/mercearia/farinhas/tapioca"
+                    }
+                  ],
+                  "name": "Farinhas",
+                  "href": "/mercearia/farinhas"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Arroz branco",
+                      "href": "/mercearia/graos/arroz-branco"
+                    },
+                    {
+                      "name": "Arroz integral",
+                      "href": "/mercearia/graos/arroz-integral"
+                    },
+                    {
+                      "name": "Arroz parboilizado",
+                      "href": "/mercearia/graos/arroz-parboilizado"
+                    },
+                    {
+                      "name": "Feijão",
+                      "href": "/mercearia/graos/feijao"
+                    },
+                    {
+                      "name": "Grãos diversos",
+                      "href": "/mercearia/graos/graos-diversos"
+                    }
+                  ],
+                  "name": "Grãos",
+                  "href": "/mercearia/graos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Macarrão instantâneo",
+                      "href": "/mercearia/massas-e-molhos/macarrao-instantaneo"
+                    },
+                    {
+                      "name": "Massa de pizza",
+                      "href": "/mercearia/massas-e-molhos/massa-de-pizza"
+                    },
+                    {
+                      "name": "Massa seca",
+                      "href": "/mercearia/massas-e-molhos/massa-seca"
+                    },
+                    {
+                      "name": "Molho",
+                      "href": "/mercearia/massas-e-molhos/molho"
+                    },
+                    {
+                      "name": "Molho de tomate",
+                      "href": "/mercearia/massas-e-molhos/molho-de-tomate"
+                    },
+                    {
+                      "name": "Queijo ralado",
+                      "href": "/mercearia/massas-e-molhos/queijo-ralado"
+                    }
+                  ],
+                  "name": "Massas e molhos",
+                  "href": "/mercearia/massas-e-molhos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Amendoim",
+                      "href": "/mercearia/salgadinhos-e-snacks/amendoim"
+                    },
+                    {
+                      "name": "Amendoim doce",
+                      "href": "/mercearia/salgadinhos-e-snacks/amendoim-doce"
+                    },
+                    {
+                      "name": "Barra de cereais",
+                      "href": "/mercearia/salgadinhos-e-snacks/barra-de-cereais"
+                    },
+                    {
+                      "name": "Batata palha",
+                      "href": "/mercearia/salgadinhos-e-snacks/batata-palha"
+                    },
+                    {
+                      "name": "Pipoca",
+                      "href": "/mercearia/salgadinhos-e-snacks/pipoca"
+                    },
+                    {
+                      "name": "Salgadinho",
+                      "href": "/mercearia/salgadinhos-e-snacks/salgadinho"
+                    },
+                    {
+                      "name": "Snack",
+                      "href": "/mercearia/salgadinhos-e-snacks/snack"
+                    }
+                  ],
+                  "name": "Salgadinhos e Snacks",
+                  "href": "/mercearia/salgadinhos-e-snacks"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Sopa e creme",
+                      "href": "/mercearia/sopas-e-cremes/sopa-e-creme"
+                    }
+                  ],
+                  "name": "Sopas e cremes",
+                  "href": "/mercearia/sopas-e-cremes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Alho e cebola",
+                      "href": "/mercearia/temperos-e-condimentos/alho-e-cebola"
+                    },
+                    {
+                      "name": "Bicarbonato",
+                      "href": "/mercearia/temperos-e-condimentos/bicarbonato"
+                    },
+                    {
+                      "name": "Ervas e especiarias",
+                      "href": "/mercearia/temperos-e-condimentos/ervas-e-especiarias"
+                    },
+                    {
+                      "name": "Ketchup",
+                      "href": "/mercearia/temperos-e-condimentos/ketchup"
+                    },
+                    {
+                      "name": "Maionese",
+                      "href": "/mercearia/temperos-e-condimentos/maionese"
+                    },
+                    {
+                      "name": "Molho barbecue",
+                      "href": "/mercearia/temperos-e-condimentos/molho-barbecue"
+                    },
+                    {
+                      "name": "Molho de pimenta",
+                      "href": "/mercearia/temperos-e-condimentos/molho-de-pimenta"
+                    },
+                    {
+                      "name": "Molho para salada",
+                      "href": "/mercearia/temperos-e-condimentos/molho-para-salada"
+                    },
+                    {
+                      "name": "Molho shoyu",
+                      "href": "/mercearia/temperos-e-condimentos/molho-shoyu"
+                    },
+                    {
+                      "name": "Molho variado",
+                      "href": "/mercearia/temperos-e-condimentos/molho-variado"
+                    },
+                    {
+                      "name": "Mostarda",
+                      "href": "/mercearia/temperos-e-condimentos/mostarda"
+                    },
+                    {
+                      "name": "Sal",
+                      "href": "/mercearia/temperos-e-condimentos/sal"
+                    },
+                    {
+                      "name": "Tempero pronto e caldo",
+                      "href": "/mercearia/temperos-e-condimentos/tempero-pronto-e-caldo"
+                    }
+                  ],
+                  "name": "Temperos e condimentos",
+                  "href": "/mercearia/temperos-e-condimentos"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Mercearia",
+              "href": "/mercearia"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Água sanitária e cloro",
+                      "href": "/limpeza/limpeza-de-banheiro/agua-sanitaria-e-cloro"
+                    },
+                    {
+                      "name": "Desinfetante sanitário",
+                      "href": "/limpeza/limpeza-de-banheiro/desinfetante-sanitario"
+                    },
+                    {
+                      "name": "Desodorizador e detergente sanitário",
+                      "href": "/limpeza/limpeza-de-banheiro/desodorizador-e-detergente-sanitario"
+                    },
+                    {
+                      "name": "Limpador sanitário",
+                      "href": "/limpeza/limpeza-de-banheiro/limpador-sanitario"
+                    }
+                  ],
+                  "name": "Limpeza de banheiro",
+                  "href": "/limpeza/limpeza-de-banheiro"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Álcool e removedor",
+                      "href": "/limpeza/limpeza-de-casa/alcool-e-removedor"
+                    },
+                    {
+                      "name": "Antimofo",
+                      "href": "/limpeza/limpeza-de-casa/antimofo"
+                    },
+                    {
+                      "name": "Aromatizante",
+                      "href": "/limpeza/limpeza-de-casa/aromatizante"
+                    },
+                    {
+                      "name": "Cera e polidor",
+                      "href": "/limpeza/limpeza-de-casa/cera-e-polidor"
+                    },
+                    {
+                      "name": "Inseticida",
+                      "href": "/limpeza/limpeza-de-casa/inseticida"
+                    },
+                    {
+                      "name": "Limpa piso e vidro",
+                      "href": "/limpeza/limpeza-de-casa/limpa-piso-e-vidro"
+                    },
+                    {
+                      "name": "Limpador perfumado e de uso geral",
+                      "href": "/limpeza/limpeza-de-casa/limpador-perfumado-e-de-uso-geral"
+                    },
+                    {
+                      "name": "Lustra móvel",
+                      "href": "/limpeza/limpeza-de-casa/lustra-movel"
+                    }
+                  ],
+                  "name": "Limpeza de casa",
+                  "href": "/limpeza/limpeza-de-casa"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Detergente",
+                      "href": "/limpeza/limpeza-de-cozinha/detergente"
+                    },
+                    {
+                      "name": "Esponja e lã de aço",
+                      "href": "/limpeza/limpeza-de-cozinha/esponja-e-la-de-aco"
+                    },
+                    {
+                      "name": "Lava louça",
+                      "href": "/limpeza/limpeza-de-cozinha/lava-louca"
+                    },
+                    {
+                      "name": "Limpador de forno",
+                      "href": "/limpeza/limpeza-de-cozinha/limpador-de-forno"
+                    },
+                    {
+                      "name": "Limpador e desengordurante",
+                      "href": "/limpeza/limpeza-de-cozinha/limpador-e-desengordurante"
+                    },
+                    {
+                      "name": "Sabão em pasta e saponáceo",
+                      "href": "/limpeza/limpeza-de-cozinha/sabao-em-pasta-e-saponaceo"
+                    }
+                  ],
+                  "name": "Limpeza de cozinha",
+                  "href": "/limpeza/limpeza-de-cozinha"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Alvejante",
+                      "href": "/limpeza/limpeza-de-roupas/alvejante"
+                    },
+                    {
+                      "name": "Amaciante",
+                      "href": "/limpeza/limpeza-de-roupas/amaciante"
+                    },
+                    {
+                      "name": "Lava roupa em pó",
+                      "href": "/limpeza/limpeza-de-roupas/lava-roupa-em-po"
+                    },
+                    {
+                      "name": "Lava roupa líquido",
+                      "href": "/limpeza/limpeza-de-roupas/lava-roupa-liquido"
+                    },
+                    {
+                      "name": "Passa roupa",
+                      "href": "/limpeza/limpeza-de-roupas/passa-roupa"
+                    },
+                    {
+                      "name": "Sabão em barra",
+                      "href": "/limpeza/limpeza-de-roupas/sabao-em-barra"
+                    },
+                    {
+                      "name": "Sanitizante em pó",
+                      "href": "/limpeza/limpeza-de-roupas/sanitizante-em-po"
+                    },
+                    {
+                      "name": "Sanitizante líquido",
+                      "href": "/limpeza/limpeza-de-roupas/sanitizante-liquido"
+                    },
+                    {
+                      "name": "Tira manchas",
+                      "href": "/limpeza/limpeza-de-roupas/tira-manchas"
+                    }
+                  ],
+                  "name": "Limpeza de roupas",
+                  "href": "/limpeza/limpeza-de-roupas"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Limpeza",
+              "href": "/limpeza"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório para bebê",
+                      "href": "/higiene-e-perfumaria/bebes/acessorio-para-bebe"
+                    },
+                    {
+                      "name": "Creme para assadura",
+                      "href": "/higiene-e-perfumaria/bebes/creme-para-assadura"
+                    },
+                    {
+                      "name": "Fralda G",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-g"
+                    },
+                    {
+                      "name": "Fralda M",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-m"
+                    },
+                    {
+                      "name": "Fralda P",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-p"
+                    },
+                    {
+                      "name": "Fralda RN",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-rn"
+                    },
+                    {
+                      "name": "Fralda XG",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-xg"
+                    },
+                    {
+                      "name": "Fralda XXG",
+                      "href": "/higiene-e-perfumaria/bebes/fralda-xxg"
+                    },
+                    {
+                      "name": "Lenço de papel e umedecido",
+                      "href": "/higiene-e-perfumaria/bebes/lenco-de-papel-e-umedecido"
+                    }
+                  ],
+                  "name": "Bebês",
+                  "href": "/higiene-e-perfumaria/bebes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Água oxigenada e descolorante",
+                      "href": "/higiene-e-perfumaria/cabelo/agua-oxigenada-e-descolorante"
+                    },
+                    {
+                      "name": "Condicionador",
+                      "href": "/higiene-e-perfumaria/cabelo/condicionador"
+                    },
+                    {
+                      "name": "Creme para pentear",
+                      "href": "/higiene-e-perfumaria/cabelo/creme-para-pentear"
+                    },
+                    {
+                      "name": "Creme para tratamento",
+                      "href": "/higiene-e-perfumaria/cabelo/creme-para-tratamento"
+                    },
+                    {
+                      "name": "Gel fixador",
+                      "href": "/higiene-e-perfumaria/cabelo/gel-fixador"
+                    },
+                    {
+                      "name": "Kit para cabelo",
+                      "href": "/higiene-e-perfumaria/cabelo/kit-para-cabelo"
+                    },
+                    {
+                      "name": "Pente e escova",
+                      "href": "/higiene-e-perfumaria/cabelo/pente-e-escova"
+                    },
+                    {
+                      "name": "Shampoo",
+                      "href": "/higiene-e-perfumaria/cabelo/shampoo"
+                    },
+                    {
+                      "name": "Tintura para cabelo",
+                      "href": "/higiene-e-perfumaria/cabelo/tintura-para-cabelo"
+                    }
+                  ],
+                  "name": "Cabelo",
+                  "href": "/higiene-e-perfumaria/cabelo"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bucha e esponja de banho",
+                      "href": "/higiene-e-perfumaria/corpo/bucha-e-esponja-de-banho"
+                    },
+                    {
+                      "name": "Desodorante para os pés",
+                      "href": "/higiene-e-perfumaria/corpo/desodorante-para-os-pes"
+                    },
+                    {
+                      "name": "Esmalte e acetona",
+                      "href": "/higiene-e-perfumaria/corpo/esmalte-e-acetona"
+                    },
+                    {
+                      "name": "Loção, talco e hidratante",
+                      "href": "/higiene-e-perfumaria/corpo/locao-talco-e-hidratante"
+                    },
+                    {
+                      "name": "Óleo perfumado",
+                      "href": "/higiene-e-perfumaria/corpo/oleo-perfumado"
+                    },
+                    {
+                      "name": "Repelente",
+                      "href": "/higiene-e-perfumaria/corpo/repelente"
+                    }
+                  ],
+                  "name": "Corpo",
+                  "href": "/higiene-e-perfumaria/corpo"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Aparelho, carga e lâmina de barbear",
+                      "href": "/higiene-e-perfumaria/cremes-de-barbear-e-barbeadores/aparelho-carga-e-lamina-de-barbear"
+                    },
+                    {
+                      "name": "Creme e espuma de barbear",
+                      "href": "/higiene-e-perfumaria/cremes-de-barbear-e-barbeadores/creme-e-espuma-de-barbear"
+                    },
+                    {
+                      "name": "Produtos para barba",
+                      "href": "/higiene-e-perfumaria/cremes-de-barbear-e-barbeadores/produtos-para-barba"
+                    }
+                  ],
+                  "name": "Cremes de barbear e barbeadores",
+                  "href": "/higiene-e-perfumaria/cremes-de-barbear-e-barbeadores"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Aerossol",
+                      "href": "/higiene-e-perfumaria/desodorantes/aerossol"
+                    },
+                    {
+                      "name": "Creme",
+                      "href": "/higiene-e-perfumaria/desodorantes/creme"
+                    },
+                    {
+                      "name": "Líquido",
+                      "href": "/higiene-e-perfumaria/desodorantes/liquido"
+                    },
+                    {
+                      "name": "Roll-On",
+                      "href": "/higiene-e-perfumaria/desodorantes/roll-on"
+                    }
+                  ],
+                  "name": "Desodorantes",
+                  "href": "/higiene-e-perfumaria/desodorantes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Creme dental",
+                      "href": "/higiene-e-perfumaria/higiene-bucal/creme-dental"
+                    },
+                    {
+                      "name": "Enxaguante bucal",
+                      "href": "/higiene-e-perfumaria/higiene-bucal/enxaguante-bucal"
+                    },
+                    {
+                      "name": "Escova dental",
+                      "href": "/higiene-e-perfumaria/higiene-bucal/escova-dental"
+                    },
+                    {
+                      "name": "Fio dental",
+                      "href": "/higiene-e-perfumaria/higiene-bucal/fio-dental"
+                    }
+                  ],
+                  "name": "Higiene bucal",
+                  "href": "/higiene-e-perfumaria/higiene-bucal"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Absorvente",
+                      "href": "/higiene-e-perfumaria/higiene-intima/absorvente"
+                    },
+                    {
+                      "name": "Sabonete Íntimo",
+                      "href": "/higiene-e-perfumaria/higiene-intima/sabonete-intimo"
+                    }
+                  ],
+                  "name": "Higiene íntima",
+                  "href": "/higiene-e-perfumaria/higiene-intima"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Folha dupla",
+                      "href": "/higiene-e-perfumaria/papel-higienico/folha-dupla"
+                    },
+                    {
+                      "name": "Folha simples",
+                      "href": "/higiene-e-perfumaria/papel-higienico/folha-simples"
+                    },
+                    {
+                      "name": "Folha tripla",
+                      "href": "/higiene-e-perfumaria/papel-higienico/folha-tripla"
+                    }
+                  ],
+                  "name": "Papel higiênico",
+                  "href": "/higiene-e-perfumaria/papel-higienico"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Sabonete em barra",
+                      "href": "/higiene-e-perfumaria/sabonetes/sabonete-em-barra"
+                    },
+                    {
+                      "name": "Sabonete líquido",
+                      "href": "/higiene-e-perfumaria/sabonetes/sabonete-liquido"
+                    }
+                  ],
+                  "name": "Sabonetes",
+                  "href": "/higiene-e-perfumaria/sabonetes"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Álcool Gel",
+                      "href": "/higiene-e-perfumaria/saude/alcool-gel"
+                    },
+                    {
+                      "name": "Algodão e curativo",
+                      "href": "/higiene-e-perfumaria/saude/algodao-e-curativo"
+                    },
+                    {
+                      "name": "Fralda geriátrica",
+                      "href": "/higiene-e-perfumaria/saude/fralda-geriatrica"
+                    },
+                    {
+                      "name": "Hastes flexíveis",
+                      "href": "/higiene-e-perfumaria/saude/hastes-flexiveis"
+                    },
+                    {
+                      "name": "Preservativo",
+                      "href": "/higiene-e-perfumaria/saude/preservativo"
+                    },
+                    {
+                      "name": "Protetor solar",
+                      "href": "/higiene-e-perfumaria/saude/protetor-solar"
+                    },
+                    {
+                      "name": "Roupa íntima",
+                      "href": "/higiene-e-perfumaria/saude/roupa-intima"
+                    },
+                    {}
+                  ],
+                  "name": "Saúde",
+                  "href": "/higiene-e-perfumaria/saude"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Higiene e perfumaria",
+              "href": "/higiene-e-perfumaria"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Aveia",
+                      "href": "/padaria-e-matinais/aveias-e-cereais/aveia"
+                    },
+                    {
+                      "name": "Cereal matinal",
+                      "href": "/padaria-e-matinais/aveias-e-cereais/cereal-matinal"
+                    },
+                    {
+                      "name": "Granola",
+                      "href": "/padaria-e-matinais/aveias-e-cereais/granola"
+                    }
+                  ],
+                  "name": "Aveias e cereais",
+                  "href": "/padaria-e-matinais/aveias-e-cereais"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Leite 0% lactose",
+                      "href": "/padaria-e-matinais/leites/leite-0--lactose"
+                    },
+                    {
+                      "name": "Leite desnatado",
+                      "href": "/padaria-e-matinais/leites/leite-desnatado"
+                    },
+                    {
+                      "name": "Leite em pó",
+                      "href": "/padaria-e-matinais/leites/leite-em-po"
+                    },
+                    {
+                      "name": "Leite integral",
+                      "href": "/padaria-e-matinais/leites/leite-integral"
+                    },
+                    {
+                      "name": "Leite semidesnatado",
+                      "href": "/padaria-e-matinais/leites/leite-semidesnatado"
+                    }
+                  ],
+                  "name": "Leites",
+                  "href": "/padaria-e-matinais/leites"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Geleia",
+                      "href": "/padaria-e-matinais/mel-geleias-e-pates/geleia"
+                    },
+                    {
+                      "name": "Mel",
+                      "href": "/padaria-e-matinais/mel-geleias-e-pates/mel"
+                    },
+                    {
+                      "name": "Patê",
+                      "href": "/padaria-e-matinais/mel-geleias-e-pates/pate"
+                    }
+                  ],
+                  "name": "Mel, geleias e patês",
+                  "href": "/padaria-e-matinais/mel-geleias-e-pates"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bisnaguinha",
+                      "href": "/padaria-e-matinais/paes-e-torradas/bisnaguinha"
+                    },
+                    {
+                      "name": "Colomba pascal",
+                      "href": "/padaria-e-matinais/paes-e-torradas/colomba-pascal"
+                    },
+                    {
+                      "name": "Pão de coco",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-de-coco"
+                    },
+                    {
+                      "name": "Pão de forma",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-de-forma"
+                    },
+                    {
+                      "name": "Pão de hambúrguer",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-de-hamburguer"
+                    },
+                    {
+                      "name": "Pão de hot dog",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-de-hot-dog"
+                    },
+                    {
+                      "name": "Pão de milho",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-de-milho"
+                    },
+                    {
+                      "name": "Pão especial",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-especial"
+                    },
+                    {
+                      "name": "Pão integral",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-integral"
+                    },
+                    {
+                      "name": "Pão sem glúten",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-sem-gluten"
+                    },
+                    {
+                      "name": "Pão sovado",
+                      "href": "/padaria-e-matinais/paes-e-torradas/pao-sovado"
+                    },
+                    {
+                      "name": "Torrada",
+                      "href": "/padaria-e-matinais/paes-e-torradas/torrada"
+                    }
+                  ],
+                  "name": "Pães e torradas",
+                  "href": "/padaria-e-matinais/paes-e-torradas"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Padaria e matinais",
+              "href": "/padaria-e-matinais"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Agenda e cadernos",
+                      "href": "/papelaria/material-escolar/agenda-e-cadernos"
+                    },
+                    {
+                      "name": "Apontador",
+                      "href": "/papelaria/material-escolar/apontador"
+                    },
+                    {
+                      "name": "Bobina",
+                      "href": "/papelaria/material-escolar/bobina"
+                    },
+                    {
+                      "name": "Borracha",
+                      "href": "/papelaria/material-escolar/borracha"
+                    },
+                    {
+                      "name": "Caneta, giz de cera e lápis",
+                      "href": "/papelaria/material-escolar/caneta-giz-de-cera-e-lapis"
+                    },
+                    {
+                      "name": "Cola",
+                      "href": "/papelaria/material-escolar/cola"
+                    },
+                    {
+                      "name": "Corretivo",
+                      "href": "/papelaria/material-escolar/corretivo"
+                    },
+                    {
+                      "name": "Fita adesiva",
+                      "href": "/papelaria/material-escolar/fita-adesiva"
+                    },
+                    {
+                      "name": "Mochila",
+                      "href": "/papelaria/material-escolar/mochila"
+                    },
+                    {
+                      "name": "Papel sulfite",
+                      "href": "/papelaria/material-escolar/papel-sulfite"
+                    }
+                  ],
+                  "name": "Material escolar",
+                  "href": "/papelaria/material-escolar"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Papelaria",
+              "href": "/papelaria"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Brinquedo e acessório",
+                      "href": "/pet-shop/acessorios-pet-shop/brinquedo-e-acessorio"
+                    },
+                    {
+                      "name": "Comedouro e bebedouro",
+                      "href": "/pet-shop/acessorios-pet-shop/comedouro-e-bebedouro"
+                    }
+                  ],
+                  "name": "Acessórios pet shop",
+                  "href": "/pet-shop/acessorios-pet-shop"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Areia para gatos",
+                      "href": "/pet-shop/higiene-e-limpeza/areia-para-gatos"
+                    },
+                    {
+                      "name": "Eliminador de odores",
+                      "href": "/pet-shop/higiene-e-limpeza/eliminador-de-odores"
+                    },
+                    {
+                      "name": "Shampoo e condicionador",
+                      "href": "/pet-shop/higiene-e-limpeza/shampoo-e-condicionador"
+                    },
+                    {
+                      "name": "Tapete higiênico",
+                      "href": "/pet-shop/higiene-e-limpeza/tapete-higienico"
+                    }
+                  ],
+                  "name": "Higiene e limpeza",
+                  "href": "/pet-shop/higiene-e-limpeza"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Biscoito para cães",
+                      "href": "/pet-shop/petiscos/biscoito-para-caes"
+                    },
+                    {
+                      "name": "Biscoito para gatos",
+                      "href": "/pet-shop/petiscos/biscoito-para-gatos"
+                    }
+                  ],
+                  "name": "Petiscos",
+                  "href": "/pet-shop/petiscos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Ração seca para cães",
+                      "href": "/pet-shop/racao/racao-seca-para-caes"
+                    },
+                    {
+                      "name": "Ração seca para gatos",
+                      "href": "/pet-shop/racao/racao-seca-para-gatos"
+                    },
+                    {
+                      "name": "Ração úmida para cães",
+                      "href": "/pet-shop/racao/racao-umida-para-caes"
+                    },
+                    {
+                      "name": "Ração úmida para gatos",
+                      "href": "/pet-shop/racao/racao-umida-para-gatos"
+                    }
+                  ],
+                  "name": "Ração",
+                  "href": "/pet-shop/racao"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Semente",
+                      "href": "/pet-shop/sementes/semente"
+                    }
+                  ],
+                  "name": "Sementes",
+                  "href": "/pet-shop/sementes"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Pet Shop",
+              "href": "/pet-shop"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório automotivo",
+                      "href": "/automotivo/acessorios-automotivos/acessorio-automotivo"
+                    }
+                  ],
+                  "name": "Acessórios automotivos",
+                  "href": "/automotivo/acessorios-automotivos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Limpador e polidor",
+                      "href": "/automotivo/limpadores-polidores-e-oleos/limpador-e-polidor"
+                    },
+                    {
+                      "name": "Óleo para motor",
+                      "href": "/automotivo/limpadores-polidores-e-oleos/oleo-para-motor"
+                    }
+                  ],
+                  "name": "Limpadores, polidores e óleos",
+                  "href": "/automotivo/limpadores-polidores-e-oleos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Aro 13",
+                      "href": "/automotivo/pneus/aro-13"
+                    },
+                    {
+                      "name": "Aro 14",
+                      "href": "/automotivo/pneus/aro-14"
+                    },
+                    {
+                      "name": "Aro 15",
+                      "href": "/automotivo/pneus/aro-15"
+                    },
+                    {
+                      "name": "Aro 16",
+                      "href": "/automotivo/pneus/aro-16"
+                    },
+                    {
+                      "name": "Aro 17",
+                      "href": "/automotivo/pneus/aro-17"
+                    },
+                    {
+                      "name": "Aro 18",
+                      "href": "/automotivo/pneus/aro-18"
+                    },
+                    {
+                      "name": "Aro 19",
+                      "href": "/automotivo/pneus/aro-19"
+                    }
+                  ],
+                  "name": "Pneus",
+                  "href": "/automotivo/pneus"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Automotivo",
+              "href": "/automotivo?category-1=automotivo"
+            },
+            {
+              "image": {},
+              "imageProperties": {},
+              "name": "Frios e congelados",
+              "href": "/frios-e-congelados"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Beleza",
+                      "href": "/eletronicos-e-eletroportateis/eletroportateis/beleza"
+                    },
+                    {
+                      "name": "Casa",
+                      "href": "/eletronicos-e-eletroportateis/eletroportateis/casa"
+                    },
+                    {
+                      "name": "Cozinha",
+                      "href": "/eletronicos-e-eletroportateis/eletroportateis/cozinha"
+                    }
+                  ],
+                  "name": "Eletroportáteis",
+                  "href": "/eletronicos-e-eletroportateis/eletroportateis"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Som",
+                      "href": "/eletronicos-e-eletroportateis/eletronicos/som"
+                    }
+                  ],
+                  "name": "Eletrônicos",
+                  "href": "/eletronicos-e-eletroportateis/eletronicos"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Eletrônicos e eletroportáteis",
+              "href": "/eletronicos-e-eletroportateis"
+            },
+            {
+              "subCategories": [],
+              "image": {},
+              "imageProperties": {},
+              "href": "/hortifruti",
+              "name": "Hortifrúti"
+            },
+            {
+              "image": {},
+              "imageProperties": {},
+              "name": "Carnes, aves e peixes",
+              "href": "/carnes-aves-e-peixes"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Chinelo",
+                      "href": "/vestuario/roupas-e-calcados/chinelo"
+                    },
+                    {
+                      "name": "Roupa e calçado",
+                      "href": "/vestuario/roupas-e-calcados/roupa-e-calcado"
+                    }
+                  ],
+                  "name": "Roupas e calçados",
+                  "href": "/vestuario/roupas-e-calcados"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Vestuário",
+              "href": "/vestuario"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Artigo para festa",
+                      "href": "/utilidades-domesticas/artigos-para-festa/artigo-para-festa"
+                    },
+                    {
+                      "name": "Caixa térmica",
+                      "href": "/utilidades-domesticas/artigos-para-festa/caixa-termica"
+                    }
+                  ],
+                  "name": "Artigos para festa",
+                  "href": "/utilidades-domesticas/artigos-para-festa"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/acessorio"
+                    },
+                    {
+                      "name": "Assento sanitário",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/assento-sanitario"
+                    },
+                    {
+                      "name": "Cantoneira",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/cantoneira"
+                    },
+                    {
+                      "name": "Escova sanitária",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/escova-sanitaria"
+                    },
+                    {
+                      "name": "Pregador de roupa e varal",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/pregador-de-roupa-e-varal"
+                    },
+                    {
+                      "name": "Resistência",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/resistencia"
+                    },
+                    {
+                      "name": "Saboneteira",
+                      "href": "/utilidades-domesticas/banheiro-e-lavanderia/saboneteira"
+                    }
+                  ],
+                  "name": "Banheiro e lavanderia",
+                  "href": "/utilidades-domesticas/banheiro-e-lavanderia"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Cama, mesa e banho diversos",
+                      "href": "/utilidades-domesticas/cama-mesa-e-banho/cama-mesa-e-banho-diversos"
+                    }
+                  ],
+                  "name": "Cama, mesa e banho",
+                  "href": "/utilidades-domesticas/cama-mesa-e-banho"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório para pia de cozinha",
+                      "href": "/utilidades-domesticas/cozinha/acessorio-para-pia-de-cozinha"
+                    },
+                    {
+                      "name": "Assadeira",
+                      "href": "/utilidades-domesticas/cozinha/assadeira"
+                    },
+                    {
+                      "name": "Cadeira, banqueta e mesa",
+                      "href": "/utilidades-domesticas/cozinha/cadeira-banqueta-e-mesa"
+                    },
+                    {
+                      "name": "Conjunto de jantar",
+                      "href": "/utilidades-domesticas/cozinha/conjunto-de-jantar"
+                    },
+                    {
+                      "name": "Copo, caneca e taça",
+                      "href": "/utilidades-domesticas/cozinha/copo-caneca-e-taca"
+                    },
+                    {
+                      "name": "Demais acessórios para cozinha",
+                      "href": "/utilidades-domesticas/cozinha/demais-acessorios-para-cozinha"
+                    },
+                    {
+                      "name": "Faca de cozinha e faqueiro",
+                      "href": "/utilidades-domesticas/cozinha/faca-de-cozinha-e-faqueiro"
+                    },
+                    {
+                      "name": "Garrafa térmica",
+                      "href": "/utilidades-domesticas/cozinha/garrafa-termica"
+                    },
+                    {
+                      "name": "Panela",
+                      "href": "/utilidades-domesticas/cozinha/panela"
+                    },
+                    {
+                      "name": "Pote, tigela e jarra",
+                      "href": "/utilidades-domesticas/cozinha/pote-tigela-e-jarra"
+                    }
+                  ],
+                  "name": "Cozinha",
+                  "href": "/utilidades-domesticas/cozinha"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Balde",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/balde"
+                    },
+                    {
+                      "name": "Caixa organizadora",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/caixa-organizadora"
+                    },
+                    {
+                      "name": "Carrinho",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/carrinho"
+                    },
+                    {
+                      "name": "Cesto de roupa",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/cesto-de-roupa"
+                    },
+                    {
+                      "name": "Desentupidor",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/desentupidor"
+                    },
+                    {
+                      "name": "Escada",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/escada"
+                    },
+                    {
+                      "name": "Lixeira",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/lixeira"
+                    },
+                    {
+                      "name": "Pano e toalha de limpeza",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/pano-e-toalha-de-limpeza"
+                    },
+                    {
+                      "name": "Saco de Lixo",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/saco-de-lixo"
+                    },
+                    {
+                      "name": "Vassoura, rodo e acessório",
+                      "href": "/utilidades-domesticas/organizacao-e-limpeza/vassoura-rodo-e-acessorio"
+                    }
+                  ],
+                  "name": "Organização e limpeza",
+                  "href": "/utilidades-domesticas/organizacao-e-limpeza"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório para manicure",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/acessorio-para-manicure"
+                    },
+                    {
+                      "name": "Adaptador, ferramenta, extensão e lanterna",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/adaptador-ferramenta-extensao-e-lanterna"
+                    },
+                    {
+                      "name": "Bomba de ar",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/bomba-de-ar"
+                    },
+                    {
+                      "name": "Churrasqueira e acessórios",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/churrasqueira-e-acessorios"
+                    },
+                    {
+                      "name": "Colchão",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/colchao"
+                    },
+                    {
+                      "name": "Corante para roupas",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/corante-para-roupas"
+                    },
+                    {
+                      "name": "Escova",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/escova"
+                    },
+                    {
+                      "name": "Espelho",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/espelho"
+                    },
+                    {
+                      "name": "Guarda-chuva",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/guarda-chuva"
+                    },
+                    {
+                      "name": "Lâmpada",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/lampada"
+                    },
+                    {
+                      "name": "Luva de procedimento",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/luva-de-procedimento"
+                    },
+                    {
+                      "name": "Mala",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/mala"
+                    },
+                    {
+                      "name": "Pilha e bateria",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/pilha-e-bateria"
+                    },
+                    {
+                      "name": "Verniz para calçados",
+                      "href": "/utilidades-domesticas/utilidades-domesticas-diversas/verniz-para-calcados"
+                    }
+                  ],
+                  "name": "Utilidades domésticas diversas",
+                  "href": "/utilidades-domesticas/utilidades-domesticas-diversas"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Fósforo, carvão e lenha",
+                      "href": "/utilidades-domesticas/velas-e-acendedores/fosforo-carvao-e-lenha"
+                    },
+                    {
+                      "name": "Vela",
+                      "href": "/utilidades-domesticas/velas-e-acendedores/vela"
+                    }
+                  ],
+                  "name": "Velas e acendedores",
+                  "href": "/utilidades-domesticas/velas-e-acendedores"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Utilidades domésticas",
+              "href": "/utilidades-domesticas"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Acessório para jardim",
+                      "href": "/jardinagem/acessorios-para-jardim/acessorio-para-jardim"
+                    }
+                  ],
+                  "name": "Acessórios para jardim",
+                  "href": "/jardinagem/acessorios-para-jardim"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Terra vegetal",
+                      "href": "/jardinagem/solo/terra-vegetal"
+                    }
+                  ],
+                  "name": "Solo",
+                  "href": "/jardinagem/solo"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Jardinagem",
+              "href": "/jardinagem"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Copo plástico",
+                      "href": "/copo-plastico"
+                    },
+                    {
+                      "name": "Guardanapo",
+                      "href": "/guardanapo"
+                    },
+                    {
+                      "name": "Máscara",
+                      "href": "/mascara"
+                    },
+                    {
+                      "name": "Palito de dente",
+                      "href": "/palito-de-dente"
+                    },
+                    {
+                      "name": "Papel filme",
+                      "href": "/papel-filme"
+                    },
+                    {
+                      "name": "Papel toalha",
+                      "href": "/papel-toalha"
+                    },
+                    {
+                      "name": "Prato",
+                      "href": "/prato"
+                    },
+                    {
+                      "name": "Talher",
+                      "href": "/talher"
+                    }
+                  ],
+                  "href": "/descartaveis",
+                  "name": "Descartáveis"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Embalagem para pizza",
+                      "href": "/embalagem-para-pizza"
+                    },
+                    {
+                      "name": "Embalagem para uso geral",
+                      "href": "/embalagem-para-uso-geral"
+                    }
+                  ],
+                  "name": "Embalagens",
+                  "href": "/embalagens"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Descartáveis e embalagens",
+              "href": "/descartaveis-e-embalagens"
+            },
+            {
+              "subCategories": [
+                {
+                  "subCategories": [
+                    {
+                      "name": "Barraca",
+                      "href": "/esporte-e-lazer/barracas-e-acessorios/barraca"
+                    },
+                    {
+                      "name": "Manta",
+                      "href": "/esporte-e-lazer/barracas-e-acessorios/manta"
+                    },
+                    {
+                      "name": "Tenda",
+                      "href": "/esporte-e-lazer/barracas-e-acessorios/tenda"
+                    },
+                    {
+                      "name": "Travesseiro",
+                      "href": "/esporte-e-lazer/barracas-e-acessorios/travesseiro"
+                    }
+                  ],
+                  "name": "Barracas e acessórios",
+                  "href": "/esporte-e-lazer/barracas-e-acessorios"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Brinquedo",
+                      "href": "/esporte-e-lazer/brinquedos/brinquedo"
+                    }
+                  ],
+                  "name": "Brinquedos",
+                  "href": "/esporte-e-lazer/brinquedos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Bicicleta adulto",
+                      "href": "/esporte-e-lazer/esporte-e-lazer-diversos/bicicleta-adulto"
+                    },
+                    {
+                      "name": "Bicicleta infantil",
+                      "href": "/esporte-e-lazer/esporte-e-lazer-diversos/bicicleta-infantil"
+                    },
+                    {
+                      "name": "Piscina",
+                      "href": "/esporte-e-lazer/esporte-e-lazer-diversos/piscina"
+                    }
+                  ],
+                  "name": "Esporte e lazer diversos",
+                  "href": "/esporte-e-lazer/esporte-e-lazer-diversos"
+                },
+                {
+                  "subCategories": [
+                    {
+                      "name": "Baralho",
+                      "href": "/esporte-e-lazer/jogos-diversos/baralho"
+                    },
+                    {
+                      "name": "Dominó",
+                      "href": "/esporte-e-lazer/jogos-diversos/domino"
+                    },
+                    {
+                      "name": "Uno",
+                      "href": "/esporte-e-lazer/jogos-diversos/uno"
+                    }
+                  ],
+                  "name": "Jogos diversos",
+                  "href": "/esporte-e-lazer/jogos-diversos"
+                }
+              ],
+              "image": {},
+              "imageProperties": {},
+              "name": "Esporte e lazer",
+              "href": "/esporte-e-lazer"
+            }
+          ]
+        }
+      }
+    },
+    "cmsPreHeader": {
+      "id": "b7479200-3752-4358-a016-869fbe6f5a67",
+      "name": "Pré Header",
+      "type": "preheaderbar",
+      "status": "published",
+      "versionId": "1710863c-b945-4d4b-9cf7-1f73178e5ee7",
+      "versionStatus": "published",
+      "sections": [],
+      "settings": {
+        "preHeaderConfiguration": {
+          "showPreHeader": false
+        }
+      },
+      "countdown": {
+        "countdownConfiguration": {
+          "messageBeforeCountdown": "ABRIL TÁ CHEGANDO...",
+          "targetDate": "2026-03-31T23:59:59"
+        }
+      },
+      "information": {
+        "informationConfiguration": {
+          "description": "Vem aí o maior aniversário do ano!",
+          "title": "Abril Parceirão"
+        }
+      }
+    },
+    "pickupPoints": {
+      "locations": [
+        {
+          "state": "SP",
+          "stores": [
+            {
+              "value": "Diadema",
+              "label": "DIADEMA - SP"
+            },
+            {
+              "value": "São Paulo",
+              "label": "SÃO PAULO - SP"
+            }
+          ]
+        }
+      ],
+      "stores": [
+        {
+          "friendlyName": "Loja - Tatuape (Autosserviço)",
+          "address": "Avenida Salim Farah Maluf, S/N",
+          "neighborhood": "Tatuape",
+          "city": "São Paulo",
+          "state": "SP",
+          "postalCode": "03076-000",
+          "pickupType": "Retire de carro",
+          "ID": "atacadaobr340",
+          "discount": ""
+        },
+        {
+          "friendlyName": "Loja - Pacaembu (Autosserviço)",
+          "address": "Rua James Holland, 668",
+          "neighborhood": "Pacaembu",
+          "city": "São Paulo",
+          "state": "SP",
+          "postalCode": "01138-000",
+          "pickupType": "Retire de carro",
+          "ID": "atacadaobr716",
+          "discount": ""
+        },
+        {
+          "friendlyName": "Loja - Vila Maria (Autosserviço)",
+          "address": "Avenida Morvan Dias de Figueiredo, 6157",
+          "neighborhood": "Vila Maria",
+          "city": "São Paulo",
+          "state": "SP",
+          "postalCode": "02170-000",
+          "pickupType": "Retire de carro",
+          "ID": "atacadaobr60",
+          "discount": ""
+        },
+        {
+          "friendlyName": "Loja - Diadema (Autosserviço)",
+          "address": "Avenida Antônio Piranga, 2085",
+          "neighborhood": "Canhema",
+          "city": "Diadema",
+          "state": "SP",
+          "postalCode": "09910-550",
+          "pickupType": "Retire de carro",
+          "ID": "atacadaobr640",
+          "discount": ""
+        }
+      ]
+    },
+    "pageType": "plp"
+  },
+  "__N_SSG": true
+}

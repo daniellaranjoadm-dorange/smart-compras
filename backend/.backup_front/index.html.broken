@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Compras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f7f7f7;
+    }
+    h1, h2, h3 { margin-bottom: 12px; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: #111827;
+      color: white;
+      font-weight: bold;
+    }
+    .muted { color: #666; font-size: 14px; }
+    .ok { color: green; font-weight: bold; }
+    .erro { color: #b00020; font-weight: bold; }
+    .hidden { display: none; }
+    .item {
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-top: 8px;
+      background: #fafafa;
+    }
+    pre {
+      background: #111827;
+      color: #f9fafb;
+      padding: 12px;
+      border-radius: 8px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #smart-auth-bar {
+      background: #111827;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    #smart-auth-logout {
+      width: auto;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: #374151;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+
+<link rel="stylesheet" href="smart-comparacao.css">
+</head>
+<body>
+  <div id="smart-auth-bar">
+    <div id="smart-auth-status">Carregando sessao...</div>
+    <button id="smart-auth-logout">Sair</button>
+  </div>
+
+  <h1>Smart Compras</h1>
+  <p class="muted">Frontend com selects e autenticacao integrada</p>
+
+  <div id="status" class="card">
+    <h2>Status</h2>
+    <div id="statusMsg">Carregando...</div>
+  </div>
+
+  <div id="authBox" class="row hidden">
+    <div class="card">
+      <h2>Cadastrar</h2>
+      <form id="registerForm">
+        <input type="text" id="registerNome" placeholder="Nome" required />
+        <input type="email" id="registerEmail" placeholder="Email" required />
+        <input type="password" id="registerSenha" placeholder="Senha" required />
+        <button type="submit">Criar conta</button>
+      </form>
+      <div id="registerMsg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Entrar</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginSenha" placeholder="Senha" required />
+        <button type="submit">Login</button>
+      </form>
+      <div id="loginMsg"></div>
+    </div>
+  </div>
+
+  <div id="userBox" class="card hidden">
+    <h2>Usuario logado</h2>
+    <div id="userInfo"></div>
+  </div>
+
+  <div id="appContent" class="hidden">
+    <div class="row">
+      <div class="card">
+        <h2>Criar lista</h2>
+        <form id="listaForm">
+          <input type="text" id="listaNome" placeholder="Nome da lista" required />
+          <button type="submit">Criar lista</button>
+        </form>
+        <div id="listaMsg"></div>
+      </div>
+
+      
+<div class="card">
+  <h2>Adicionar item</h2>
+  <form id="itemForm">
+    <label for="itemListaSelect">Lista</label>
+    <select id="itemListaSelect" required>
+      <option value="">Selecione uma lista</option>
+    </select>
+
+    <label for="buscarProdutoInput">Buscar produto</label>
+    <input type="text" id="buscarProdutoInput" placeholder="Digite para buscar (ex: arroz, leite, caf?...)" />
+
+    <label for="itemProdutoSelect">Produto</label>
+    <select id="itemProdutoSelect" required>
+      <option value="">Selecione um produto</option>
+    </select>
+
+    <input type="number" id="itemQuantidade" placeholder="Quantidade" value="1" required />
+    <button type="submit">Adicionar item</button>
+  </form>
+  <div id="itemMsg"></div>
+</div>
+
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <h2>Minhas listas</h2>
+        <button id="carregarListasBtn">Atualizar listas</button>
+        <div id="listasOutput"></div>
+      </div>
+
+      <div class="card">
+        <h2>Meus itens</h2>
+        <button id="carregarItensBtn">Atualizar itens</button>
+        <div id="itensOutput"></div>
+      </div>
+    </div>
+
+    <div class="row-3">
+      <div class="card">
+        <h3>Produtos</h3>
+        <button id="carregarProdutosBtn">Carregar produtos</button>
+        <pre id="produtosOutput" style="display:none;">Sem dados</pre>
+      </div>
+
+      <div class="card">
+        <h3>Cidades</h3>
+        <button id="carregarCidadesBtn">Carregar cidades</button>
+        <pre id="cidadesOutput" style="display:none;">Sem dados</pre>
+      </div>
+
+      <div class="card">
+        <h3>Teste /auth/me</h3>
+        <button id="meBtn">Buscar usuario logado</button>
+        <pre id="meOutput">Sem dados</pre>
+      </div>
+    </div>
+  </div>
+
+  
+
+<script src="/smart-comparacao.js"></script>
+
+
+<script>
+/* SMART_SUBMIT_ITEM_REAL_V1 */
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("itemForm");
+  const listaSelect = document.getElementById("itemListaSelect");
+  const produtoSelect = document.getElementById("itemProdutoSelect");
+  const quantidadeInput = document.getElementById("itemQuantidade");
+  const itemMsg = document.getElementById("itemMsg");
+
+  if (!form || !listaSelect || !produtoSelect || !quantidadeInput || !itemMsg) {
+    console.warn("Formulario de item incompleto no DOM");
+    return;
+  }
+
+  function setItemMsg(msg, ok = true) {
+    itemMsg.textContent = msg;
+    itemMsg.style.color = ok ? "green" : "red";
+  }
+
+  async function apiFetch(url, options = {}) {
+    const token = localStorage.getItem("smartcompras_token");
+    const headers = Object.assign({}, options.headers || {});
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    if (!headers["Content-Type"] && options.body) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetch(url, { ...options, headers });
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (_) {}
+
+    if (!response.ok) {
+      const msg = data?.detail || `HTTP ${response.status}`;
+      throw new Error(msg);
+    }
+
+    return data;
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const lista_id = Number(listaSelect.value);
+    const produto_id = Number(produtoSelect.value);
+    const quantidade = Number(quantidadeInput.value || 1);
+
+    if (!lista_id) {
+      setItemMsg("Selecione uma lista", false);
+      return;
+    }
+
+    if (!produto_id) {
+      setItemMsg("Selecione um produto", false);
+      return;
+    }
+
+    if (!quantidade || quantidade < 1) {
+      setItemMsg("Quantidade inv?lida", false);
+      return;
+    }
+
+    try {
+      setItemMsg("Adicionando item...", true);
+
+      await apiFetch("/api/itens", {
+        method: "POST",
+        body: JSON.stringify({
+          lista_id,
+          produto_id,
+          quantidade
+        })
+      });
+
+      setItemMsg("Item adicionado com sucesso", true);
+      quantidadeInput.value = 1;
+
+      const carregarItensBtn = document.getElementById("carregarItensBtn");
+      if (carregarItensBtn) carregarItensBtn.click();
+
+      const cidadeSelect = document.getElementById("cidadeSelect");
+      if (cidadeSelect && cidadeSelect.value && listaSelect.value) {
+        const compararBtn = document.getElementById("compararBtn");
+        if (compararBtn) compararBtn.click();
+      }
+    } catch (err) {
+      console.error(err);
+      setItemMsg("Erro ao adicionar item: " + err.message, false);
+    }
+  });
+});
+</script>
+
+
+<script>
+/* SMART_LOAD_LISTAS_IN_ITEM_SELECT_V1 */
+document.addEventListener("DOMContentLoaded", function () {
+  const listaSelect = document.getElementById("itemListaSelect");
+  if (!listaSelect) return;
+
+  async function carregarListasNoSelect() {
+    const token = localStorage.getItem("smartcompras_token");
+    if (!token) return;
+
+    try {
+      const resp = await fetch("/api/listas", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await resp.json();
+      if (!resp.ok || !Array.isArray(data)) return;
+
+      listaSelect.innerHTML = '<option value="">Selecione uma lista</option>';
+
+      data.forEach(lista => {
+        const opt = document.createElement("option");
+        opt.value = lista.id;
+        opt.textContent = lista.nome || `Lista ${lista.id}`;
+        listaSelect.appendChild(opt);
+      });
+    } catch (e) {
+      console.error("Erro carregando listas no select", e);
+    }
+  }
+
+  carregarListasNoSelect();
+});
+</script>
+
+
+<script>
+/* SMART_RENDER_ITENS_COM_NOME_V1 */
+document.addEventListener("DOMContentLoaded", function () {
+  const btn = document.getElementById("carregarItensBtn");
+  const output = document.getElementById("itensOutput");
+
+  if (!btn || !output) {
+    console.warn("Bloco de itens n?o encontrado");
+    return;
+  }
+
+  async function authFetch(url, options = {}) {
+    const token = localStorage.getItem("smartcompras_token");
+    const headers = Object.assign({}, options.headers || {});
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const resp = await fetch(url, { ...options, headers });
+    const data = await resp.json().catch(() => null);
+
+    if (!resp.ok) {
+      throw new Error(data?.detail || `HTTP ${resp.status}`);
+    }
+
+    return data;
+  }
+
+  function renderItens(itens, produtoMap) {
+    if (!Array.isArray(itens) || itens.length === 0) {
+      output.innerHTML = '<div class="item">Nenhum item encontrado.</div>';
+      return;
+    }
+
+    output.innerHTML = itens.map(item => {
+      const produtoNome =
+        item.produto_nome ||
+        item.nome ||
+        produtoMap[item.produto_id] ||
+        `Produto ID ${item.produto_id}`;
+
+      return `
+        <div class="item">
+          <strong>ID:</strong> ${item.id}<br>
+          <strong>Lista ID:</strong> ${item.lista_id}<br>
+          <strong>Produto:</strong> ${produtoNome}<br>
+          <strong>Quantidade:</strong> ${item.quantidade}
+        </div>
+      `;
+    }).join("");
+  }
+
+  async function carregarItensComNome() {
+    try {
+      output.innerHTML = '<div class="item">Carregando itens...</div>';
+
+      const [itens, produtos] = await Promise.all([
+        authFetch("/api/itens"),
+        authFetch("/api/produtos")
+      ]);
+
+      const produtoMap = {};
+      if (Array.isArray(produtos)) {
+        produtos.forEach(p => {
+          produtoMap[p.id] = p.nome;
+        });
+      }
+
+      renderItens(itens, produtoMap);
+    } catch (e) {
+      console.error("Erro ao carregar itens:", e);
+      output.innerHTML = `<div class="item erro">Erro ao carregar itens: ${e.message}</div>`;
+    }
+  }
+
+  btn.addEventListener("click", carregarItensComNome);
+
+  // carga inicial
+  carregarItensComNome();
+});
+</script>

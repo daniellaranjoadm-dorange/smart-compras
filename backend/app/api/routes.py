@@ -225,7 +225,19 @@ def listar_listas_modelo(
 
 
 @router.post("/itens-lista-modelo", response_model=ItemListaModeloRead)
-def criar_item_lista_modelo(payload: ItemListaModeloCreate, db: Session = Depends(get_db)):
+def criar_item_lista_modelo(
+    payload: ItemListaModeloCreate,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
+    lista_modelo = db.query(ListaModelo).filter(
+        ListaModelo.id == payload.lista_modelo_id,
+        ListaModelo.usuario_id == usuario.id
+    ).first()
+
+    if not lista_modelo:
+        raise HTTPException(status_code=404, detail="Lista modelo nao encontrada.")
+
     item = ItemListaModelo(**payload.model_dump())
     db.add(item)
     db.commit()
@@ -276,7 +288,11 @@ def listar_listas(
 
 
 @router.post("/listas-modelo/{lista_modelo_id}/gerar", response_model=ListaCompraRead)
-def gerar_lista_de_modelo(lista_modelo_id: int, db: Session = Depends(get_db)):
+def gerar_lista_de_modelo(
+    lista_modelo_id: int,
+    db: Session = Depends(get_db),
+    usuario: Usuario = Depends(get_current_user)
+):
     modelo = db.query(ListaModelo).filter(
     ListaModelo.id == lista_modelo_id,
     ListaModelo.usuario_id == usuario.id
@@ -515,3 +531,22 @@ def resumo_inteligente(
         raise HTTPException(status_code=404, detail="Lista nao encontrada.")
     return resultado
 
+
+
+
+@router.get("/produtos/busca")
+def buscar_produtos(q: str = "", limit: int = 20, db: Session = Depends(get_db)):
+    query = db.query(Produto)
+
+    if q:
+        query = query.filter(Produto.nome.ilike(f"%{q}%"))
+
+    produtos = query.limit(limit).all()
+
+    return [
+        {
+            "id": p.id,
+            "nome": p.nome
+        }
+        for p in produtos
+    ]

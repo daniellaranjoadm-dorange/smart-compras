@@ -199,7 +199,7 @@
         <h3>Produtos</h3>
         <button id="carregarProdutosBtn">Carregar produtos</button>
         <input type="text" id="produtosBuscaInput" placeholder="Buscar produto..." />
-<div id="produtosOutput" class="produtos-lista" data-loaded="0">Sem dados</div>
+<div id="produtosOutput" class="produtos-lista">Sem dados</div>
       </div>
 
       <div class="card">
@@ -437,13 +437,7 @@
       renderItens(data);
     }
 
-    async function carregarProdutos(force = false) {
-      if (!force && Array.isArray(produtosCache) && produtosCache.length) {
-        const busca = document.getElementById("produtosBuscaInput");
-        renderProdutos(produtosCache, busca ? busca.value : "");
-        return;
-      }
-
+    async function carregarProdutos() {
       const response = await apiFetch(API_BASE + "/produtos");
       const data = await response.json();
 
@@ -625,22 +619,10 @@
     });
 
     document.getElementById("carregarProdutosBtn").addEventListener("click", async function () {
-      const output = document.getElementById("produtosOutput");
-      const btn = document.getElementById("carregarProdutosBtn");
-
       try {
-        if (output.dataset.loaded === "1") {
-          output.innerHTML = "Sem dados";
-          output.dataset.loaded = "0";
-          btn.textContent = "Carregar produtos";
-          return;
-        }
-
-        await carregarProdutos(true);
-        output.dataset.loaded = "1";
-        btn.textContent = "Ocultar produtos";
+        await carregarProdutos();
       } catch (error) {
-        output.textContent = "Erro ao carregar produtos";
+        document.getElementById("produtosOutput").textContent = "Erro ao carregar produtos";
       }
     });
 

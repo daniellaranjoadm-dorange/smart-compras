@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "data": [],
+  "paginator": {
+    "page": 1,
+    "items_per_page": 10,
+    "total_pages": 0,
+    "total_items": 0
+  }
+}
