@@ -206,7 +206,7 @@
       <div class="card">
         <h2>Meus itens</h2>
         <button id="carregarItensBtn">Atualizar itens</button>
-        <div id="itensOutput"></div>
+        <div id="itensResumo" style="margin-bottom:10px;font-weight:600;"></div><div id="itensOutput"></div>
       </div>
     </div>
 
@@ -349,6 +349,7 @@
       }
 
       output.innerHTML = "";
+      atualizarResumoItens(itens);
       lista.forEach(function(produto) {
         const div = document.createElement("div");
         div.className = "produto-card";
@@ -400,6 +401,7 @@
       }
 
       output.innerHTML = "";
+      atualizarResumoItens(itens);
       listas.forEach(function(lista) {
         const div = document.createElement("div");
         div.className = "item";
@@ -410,7 +412,16 @@
       });
     }
 
-    function renderItens(itens) {
+    
+function atualizarResumoItens(itens) {
+  const total = itens.reduce((acc, i) => acc + (i.quantidade || 0), 0);
+  const el = document.getElementById("itensResumo");
+  if (el) {
+    el.textContent = "Total de itens: " + total;
+  }
+}
+
+function renderItens(itens) {
       const output = document.getElementById("itensOutput");
 
       if (!itens.length) {
@@ -419,6 +430,7 @@
       }
 
       output.innerHTML = "";
+      atualizarResumoItens(itens);
       itens.forEach(function(item) {
         const div = document.createElement("div");
         div.className = "item";
@@ -471,6 +483,12 @@
     }
 
     async function carregarItens() {
+      if (!Array.isArray(produtosCache) || !produtosCache.length) {
+        try {
+          await carregarProdutos(true);
+        } catch (e) {}
+      }
+
       const response = await apiFetch(API_BASE + "/itens");
       const data = await response.json();
 
