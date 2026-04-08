@@ -68,6 +68,7 @@ class Produto(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     nome: Mapped[str] = mapped_column(String(120), index=True)
     categoria_id: Mapped[int | None] = mapped_column(ForeignKey("categorias.id"), nullable=True)
+    assinatura: Mapped[str | None] = mapped_column(nullable=True, index=True)
 
     categoria = relationship("Categoria")
 

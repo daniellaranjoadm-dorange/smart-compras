@@ -4,75 +4,206 @@
   <meta charset="UTF-8">
   <title>Smart Compras</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 1100px; margin: 0 auto; padding: 24px; background: #f7f7f7; }
-    h1, h2 { margin-bottom: 12px; }
-    .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    input, button, select { padding: 10px; margin-top: 8px; box-sizing: border-box; }
-    button { cursor: pointer; }
-    .muted { color: #666; }
-    .ok { color: green; font-weight: bold; }
-    .erro { color: #b00020; font-weight: bold; }
-    .item { padding: 8px 0; border-bottom: 1px solid #eee; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+    h1, h2, h3 {
+      margin: 0 0 12px 0;
+    }
+    .topbar {
+      margin-bottom: 20px;
+    }
+    .status {
+      font-weight: bold;
+      margin-top: 8px;
+    }
+    .ok { color: #0a7a2f; }
+    .erro { color: #b00020; }
+    .muted { color: #6b7280; }
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .col {
+      display: grid;
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+      border: 1px solid #e5e7eb;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    input, button, select {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      background: white;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: #0f172a;
+      color: white;
+      font-weight: bold;
+    }
+    button.secundario {
+      background: #475569;
+    }
+    button.perigo {
+      background: #b00020;
+    }
+    .lista-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
+    .lista-card.ativa {
+      border: 2px solid #0f172a;
+      background: #eef2ff;
+    }
+    .linha-topo {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .lista-nome {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .acoes button {
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    .item-row {
+      border-bottom: 1px solid #ececec;
+      padding: 10px 0;
+    }
+    .item-row:last-child {
+      border-bottom: none;
+    }
+    .item-title {
+      font-weight: bold;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .resultado-bloco {
+      border-top: 1px solid #ececec;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      font-size: 12px;
+      margin-left: 6px;
+    }
   </style>
 </head>
 <body>
 
-<h1>Smart Compras</h1>
-<div id="statusMsg" class="ok">Sistema iniciando...</div>
-
-<div class="row">
-  <div class="card">
-    <h2>Criar lista</h2>
-    <input id="nomeLista" placeholder="Nome da lista" style="width:100%;">
-    <button onclick="criarLista()">Criar</button>
+  <div class="topbar">
+    <h1>Smart Compras</h1>
+    <div id="statusMsg" class="status ok">Sistema iniciando...</div>
   </div>
 
-  <div class="card">
-    <h2>Adicionar item</h2>
-    <div>
-      <label>Lista</label><br>
-      <select id="listaSelect" style="width:100%;"></select>
+  <div class="grid">
+    <div class="col">
+      <div class="card">
+        <h2>Listas</h2>
+
+        <div class="form-group">
+          <input id="nomeLista" placeholder="Nome da lista">
+        </div>
+
+        <div class="toolbar">
+          <button onclick="criarLista()">Criar lista</button>
+          <button class="secundario" onclick="carregarListas()">Atualizar</button>
+        </div>
+
+        <div class="resultado-bloco">
+          <div id="listasOutput" class="muted">Carregando listas...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Adicionar item</h2>
+
+        <div class="form-group">
+          <label>Lista selecionada</label>
+          <select id="listaSelect"></select>
+        </div>
+
+        <div class="form-group">
+          <label>ID do produto</label>
+          <input id="produtoId" placeholder="Ex: 41">
+        </div>
+
+        <div class="form-group">
+          <label>Quantidade</label>
+          <input id="quantidade" type="number" value="1" min="1">
+        </div>
+
+        <div class="toolbar">
+          <button onclick="adicionarItem()">Adicionar item</button>
+          <button class="secundario" onclick="calcularCesta()">Calcular melhor cesta</button>
+        </div>
+      </div>
     </div>
-    <div>
-      <label>ID do produto</label><br>
-      <input id="produtoId" placeholder="Ex: 41" style="width:100%;">
+
+    <div class="col">
+      <div class="card">
+        <h2>Itens da lista <span id="listaAtualBadge" class="pill">nenhuma</span></h2>
+        <div id="itensOutput" class="muted">Selecione uma lista</div>
+      </div>
+
+      <div class="card">
+        <h2>Resultado da Cesta</h2>
+        <div id="cestaOutput" class="muted">Sem cálculo ainda</div>
+      </div>
     </div>
-    <div>
-      <label>Quantidade</label><br>
-      <input id="quantidade" type="number" value="1" min="1" style="width:100%;">
-    </div>
-    <button onclick="adicionarItem()">Adicionar</button>
-    <button onclick="calcularCesta()">Calcular melhor cesta</button>
   </div>
-</div>
-
-<div class="row">
-  <div class="card">
-    <h2>Listas</h2>
-    <button onclick="carregarListas()">Atualizar listas</button>
-    <div id="listasOutput" class="muted">Sem dados</div>
-  </div>
-
-  <div class="card">
-    <h2>Itens</h2>
-    <button onclick="carregarItens()">Atualizar itens</button>
-    <div id="itensOutput" class="muted">Sem dados</div>
-  </div>
-</div>
-
-<div class="card">
-  <h2>Resultado da Cesta</h2>
-  <div id="cestaOutput" class="muted">Sem cálculo ainda</div>
-</div>
 
 <script>
 let listasCache = [];
 let produtosCache = [];
+let itensCache = [];
+let listaSelecionadaId = null;
 
 function setStatus(msg, tipo) {
   const el = document.getElementById("statusMsg");
-  el.className = tipo || "";
+  el.className = "status " + (tipo || "");
   el.textContent = msg;
 }
 
@@ -96,6 +227,11 @@ function getProdutoNome(produtoId) {
   return produto ? produto.nome : "Produto ID " + produtoId;
 }
 
+function listaNomePorId(listaId) {
+  const lista = listasCache.find(l => Number(l.id) === Number(listaId));
+  return lista ? lista.nome : "Desconhecida";
+}
+
 async function carregarProdutos() {
   const resp = await fetch("/api/produtos");
   const data = await resp.json();
@@ -107,7 +243,9 @@ async function carregarListas() {
     const resp = await fetch("/api/listas");
     const data = await resp.json();
 
-    listasCache = Array.isArray(data) ? data : [];
+    listasCache = (Array.isArray(data) ? data : []).sort((a, b) =>
+      String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR", { sensitivity: "base" })
+    );
 
     const div = document.getElementById("listasOutput");
     const select = document.getElementById("listaSelect");
@@ -117,26 +255,61 @@ async function carregarListas() {
 
     if (!listasCache.length) {
       div.innerHTML = "<div class='muted'>Nenhuma lista encontrada</div>";
+      document.getElementById("listaAtualBadge").textContent = "nenhuma";
       return;
     }
 
     listasCache.forEach(l => {
-      const el = document.createElement("div");
-      el.className = "item";
-      el.textContent = l.id + " - " + l.nome;
-      div.appendChild(el);
-
       const opt = document.createElement("option");
       opt.value = l.id;
       opt.textContent = l.nome;
       select.appendChild(opt);
     });
 
+    if (!listaSelecionadaId || !listasCache.some(l => Number(l.id) === Number(listaSelecionadaId))) {
+      listaSelecionadaId = Number(listasCache[0].id);
+    }
+
+    select.value = String(listaSelecionadaId);
+
+    listasCache.forEach(l => {
+      const ativa = Number(l.id) === Number(listaSelecionadaId);
+
+      const card = document.createElement("div");
+      card.className = "lista-card" + (ativa ? " ativa" : "");
+
+      card.innerHTML = 
+        <div class="linha-topo">
+          <div>
+            <div class="lista-nome"></div>
+            <div class="muted">ID: </div>
+          </div>
+          <div class="acoes">
+            <button onclick="selecionarLista()">Selecionar</button>
+            <button class="secundario" onclick="editarLista(, '')">Editar</button>
+            <button class="perigo" onclick="excluirLista()">Excluir</button>
+          </div>
+        </div>
+      ;
+
+      div.appendChild(card);
+    });
+
+    document.getElementById("listaAtualBadge").textContent = listaNomePorId(listaSelecionadaId);
+    await carregarItens();
+
     setStatus("Listas carregadas", "ok");
   } catch (e) {
     console.error(e);
     setStatus("Erro ao carregar listas", "erro");
   }
+}
+
+function selecionarLista(listaId) {
+  listaSelecionadaId = Number(listaId);
+  const select = document.getElementById("listaSelect");
+  select.value = String(listaSelecionadaId);
+  carregarListas();
 }
 
 async function criarLista() {
@@ -168,6 +341,55 @@ async function criarLista() {
   }
 }
 
+async function editarLista(listaId, nomeAtual) {
+  const novoNome = prompt("Novo nome da lista:", nomeAtual || "");
+  if (!novoNome || !novoNome.trim()) return;
+
+  try {
+    const resp = await fetch("/api/listas/" + listaId, {
+      method: "PUT",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ nome: novoNome.trim() })
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao editar lista");
+    }
+
+    await carregarListas();
+    setStatus("Lista atualizada com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao editar lista", "erro");
+  }
+}
+
+async function excluirLista(listaId) {
+  if (!confirm("Deseja realmente excluir esta lista?")) return;
+
+  try {
+    const resp = await fetch("/api/listas/" + listaId, {
+      method: "DELETE"
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao excluir lista");
+    }
+
+    if (Number(listaSelecionadaId) === Number(listaId)) {
+      listaSelecionadaId = null;
+    }
+
+    await carregarListas();
+    setStatus("Lista excluída com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao excluir lista", "erro");
+  }
+}
+
 async function adicionarItem() {
   const lista_id = Number(document.getElementById("listaSelect").value);
   const produto_id = Number(document.getElementById("produtoId").value);
@@ -194,6 +416,9 @@ async function adicionarItem() {
       throw new Error(txt || "Falha ao adicionar item");
     }
 
+    listaSelecionadaId = lista_id;
+    document.getElementById("produtoId").value = "";
+    document.getElementById("quantidade").value = "1";
     await carregarItens();
     setStatus("Item adicionado com sucesso", "ok");
   } catch (e) {
@@ -202,27 +427,64 @@ async function adicionarItem() {
   }
 }
 
+async function excluirItem(itemId) {
+  if (!confirm("Deseja remover este item?")) return;
+
+  try {
+    const resp = await fetch("/api/itens/" + itemId, {
+      method: "DELETE"
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao excluir item");
+    }
+
+    await carregarItens();
+    setStatus("Item removido com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao remover item", "erro");
+  }
+}
+
 async function carregarItens() {
   try {
     const resp = await fetch("/api/itens");
     const data = await resp.json();
 
+    itensCache = Array.isArray(data) ? data : [];
+
     const div = document.getElementById("itensOutput");
     div.innerHTML = "";
 
-    if (!Array.isArray(data) || !data.length) {
-      div.innerHTML = "<div class='muted'>Nenhum item encontrado</div>";
+    const listaIdAtual = Number(document.getElementById("listaSelect").value || listaSelecionadaId || 0);
+    listaSelecionadaId = listaIdAtual;
+
+    const filtrados = itensCache.filter(item => Number(item.lista_id) === Number(listaIdAtual));
+
+    document.getElementById("listaAtualBadge").textContent = listaNomePorId(listaSelecionadaId);
+
+    if (!filtrados.length) {
+      div.innerHTML = "<div class='muted'>Nenhum item nesta lista</div>";
       return;
     }
 
-    data.forEach(item => {
+    filtrados.forEach(item => {
       const el = document.createElement("div");
-      el.className = "item";
-      el.innerHTML =
-        "<strong>ID:</strong> " + item.id + "<br>" +
-        "<strong>Lista ID:</strong> " + item.lista_id + "<br>" +
-        "<strong>Produto:</strong> " + escapeHtml(getProdutoNome(item.produto_id)) + "<br>" +
-        "<strong>Quantidade:</strong> " + item.quantidade;
+      el.className = "item-row";
+      el.innerHTML = 
+        <div class="linha-topo">
+          <div>
+            <div class="item-title"></div>
+            <div class="muted">Item ID:  | Produto ID: </div>
+            <div>Quantidade: <strong></strong></div>
+          </div>
+          <div class="acoes">
+            <button class="perigo" onclick="excluirItem()">Excluir item</button>
+          </div>
+        </div>
+      ;
       div.appendChild(el);
     });
 
@@ -243,10 +505,10 @@ function mostrarResultadoCesta(data) {
 
   let html = "";
 
-  html += "<div class='item'><strong>Total melhor por item:</strong> " + formatMoney(data.total_cesta_melhor_por_item || 0) + "</div>";
+  html += "<div class='item-row'><strong>Total melhor por item:</strong> " + formatMoney(data.total_cesta_melhor_por_item || 0) + "</div>";
 
   if (data.melhor_mercado_cesta) {
-    html += "<div class='item'>" +
+    html += "<div class='item-row'>" +
       "<strong>Melhor mercado:</strong> " + escapeHtml(data.melhor_mercado_cesta.unidade_nome || "") + "<br>" +
       "<strong>Rede:</strong> " + escapeHtml(data.melhor_mercado_cesta.rede || "") + "<br>" +
       "<strong>Cidade:</strong> " + escapeHtml(data.melhor_mercado_cesta.cidade || "") + "<br>" +
@@ -255,13 +517,13 @@ function mostrarResultadoCesta(data) {
   }
 
   if (data.economia_absoluta != null) {
-    html += "<div class='item'><strong>Economia:</strong> " + formatMoney(data.economia_absoluta) + " (" + (data.economia_percentual ?? 0) + "%)</div>";
+    html += "<div class='item-row'><strong>Economia:</strong> " + formatMoney(data.economia_absoluta) + " (" + (data.economia_percentual ?? 0) + "%)</div>";
   }
 
-  html += "<h3>Itens encontrados</h3>";
+  html += "<h3 style='margin-top:16px;'>Itens encontrados</h3>";
 
   data.itens_encontrados.forEach(i => {
-    html += "<div class='item'>" +
+    html += "<div class='item-row'>" +
       "<strong>Consulta:</strong> " + escapeHtml(i.query_item || "") + "<br>" +
       "<strong>Produto:</strong> " + escapeHtml(i.produto_nome || "") + "<br>" +
       "<strong>Preço:</strong> " + formatMoney(i.preco || 0) + "<br>" +
@@ -271,9 +533,9 @@ function mostrarResultadoCesta(data) {
   });
 
   if (data.itens_nao_encontrados && data.itens_nao_encontrados.length) {
-    html += "<h3>Não encontrados</h3>";
+    html += "<h3 style='margin-top:16px;'>Não encontrados</h3>";
     data.itens_nao_encontrados.forEach(nome => {
-      html += "<div class='item'>" + escapeHtml(nome) + "</div>";
+      html += "<div class='item-row'>" + escapeHtml(nome) + "</div>";
     });
   }
 
@@ -313,6 +575,11 @@ async function calcularCesta() {
     setStatus("Erro ao calcular cesta", "erro");
   }
 }
+
+document.getElementById("listaSelect").addEventListener("change", function () {
+  listaSelecionadaId = Number(this.value);
+  carregarItens();
+});
 
 async function init() {
   await carregarProdutos();

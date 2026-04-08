@@ -1,4 +1,5 @@
-﻿import re
+from app.services.normalizacao_produto import gerar_assinatura_produto
+import re
 import unicodedata
 
 from fastapi import APIRouter, Depends, Query
@@ -96,6 +97,63 @@ def assinatura_produto(nome: str):
     return assinatura, base, medida_valor, medida_unidade
 
 
+
+def dados_assinatura_do_produto(produto):
+    def montar(assinatura: str | None):
+        if not assinatura:
+            return None
+
+        # formato novo: cafe_250g / feijao_carioca_1kg
+        if "_" in assinatura and " | " not in assinatura:
+            partes = assinatura.split("_")
+            base = partes[0] if partes else None
+
+            medida_valor = None
+            medida_unidade = None
+
+            for token in reversed(partes):
+                m = re.match(r"^(\d+(?:\.\d+)?)(kg|g|ml|l|m|rolos)$", token)
+                if m:
+                    try:
+                        medida_valor = float(m.group(1))
+                    except Exception:
+                        medida_valor = None
+                    medida_unidade = m.group(2)
+                    break
+
+            return assinatura, base, medida_valor, medida_unidade
+
+        # formato legado: "base | 5g"
+        if " | " in assinatura:
+            partes = assinatura.split(" | ", 1)
+            base = partes[0].strip()
+            medida_txt = partes[1].strip() if len(partes) > 1 else ""
+
+            medida_valor = None
+            medida_unidade = None
+
+            m = re.match(r"^(\d+(?:\.\d+)?)(kg|g|ml|l|m|rolos)$", medida_txt)
+            if m:
+                try:
+                    medida_valor = float(m.group(1))
+                except Exception:
+                    medida_valor = None
+                medida_unidade = m.group(2)
+
+            return assinatura, base, medida_valor, medida_unidade
+
+        return None
+
+    # PRIORIDADE TOTAL: core novo
+    assinatura_nova = gerar_assinatura_produto(produto.nome)
+    dados = montar(assinatura_nova)
+    if dados:
+        return dados
+
+    # se o core novo disser que nao serve, ignora produto
+    return None, None, None, None
+
+
 def produto_bloqueado(nome: str) -> bool:
     nome_norm = normalizar(nome)
 
@@ -122,6 +180,41 @@ def tokens_relevantes_query(q: str):
     return tokens
 
 
+
+
+def score_relevancia_comparacao(base: str, medida_valor, medida_unidade) -> float:
+    if medida_valor is None or not medida_unidade:
+        return 0.0
+
+    alvo = None
+
+    if base == "cafe":
+        if medida_unidade == "g":
+            alvo = 500
+        elif medida_unidade == "kg":
+            alvo = 0.5
+    elif base == "feijao":
+        if medida_unidade == "g":
+            alvo = 1000
+        elif medida_unidade == "kg":
+            alvo = 1
+    elif base == "arroz":
+        if medida_unidade == "g":
+            alvo = 5000
+        elif medida_unidade == "kg":
+            alvo = 5
+    elif base == "leite":
+        if medida_unidade == "ml":
+            alvo = 1000
+        elif medida_unidade == "l":
+            alvo = 1
+
+    if alvo is None:
+        return 1.0
+
+    return 100000.0 - abs(float(medida_valor) - float(alvo))
+
+
 @router.get("")
 def comparar_produtos(
     q: str = Query(..., min_length=2),
@@ -129,41 +222,39 @@ def comparar_produtos(
     limit_produtos: int = Query(default=150, le=400),
     db: Session = Depends(get_db),
 ):
+    q_norm = normalizar(q).strip()
     tokens_q = tokens_relevantes_query(q)
 
-    consulta = (
-        db.query(Produto, Categoria)
-        .outerjoin(Categoria, Produto.categoria_id == Categoria.id)
-        .filter(Produto.nome.ilike(f"%{q}%"))
-    )
+    consulta = db.query(Produto, Categoria).outerjoin(Categoria, Produto.categoria_id == Categoria.id)
 
     if categoria:
         consulta = consulta.filter(Categoria.nome == categoria)
 
-    produtos_encontrados = consulta.order_by(Produto.nome.asc()).limit(limit_produtos).all()
-
-    if not produtos_encontrados:
-        return {
-            "q": q,
-            "tokens_q": tokens_q,
-            "total_grupos": 0,
-            "grupos": []
-        }
+    produtos_encontrados = consulta.order_by(Produto.nome.asc()).limit(5000).all()
 
     grupos = {}
 
     for produto, categoria_obj in produtos_encontrados:
-        nome_norm = normalizar(produto.nome)
-
         if produto_bloqueado(produto.nome):
             continue
 
-        if tokens_q and not all(token in nome_norm for token in tokens_q):
+        assinatura, base, medida_valor, medida_unidade = dados_assinatura_do_produto(produto)
+
+        if not assinatura or not base:
             continue
 
-        assinatura, base, medida_valor, medida_unidade = assinatura_produto(produto.nome)
+        # BLOQUEIO PRODUTOS SEM MEDIDA (CRÍTICO)
+        if medida_valor is None or not medida_unidade:
+            continue
 
-        if medida_valor is None:
+        # BLOQUEIO ASSINATURA LIXO
+        if assinatura.endswith("_na"):
+            continue
+
+        base_norm = normalizar(base).strip()
+
+        # matching semântico exato por base
+        if base_norm != q_norm:
             continue
 
         precos_raw = (
@@ -225,6 +316,11 @@ def comparar_produtos(
     grupos_ordenados = sorted(
         grupos.values(),
         key=lambda g: (
+            -score_relevancia_comparacao(
+                g.get("base"),
+                g.get("medida_valor"),
+                g.get("medida_unidade"),
+            ),
             g["menor_preco"] if g["menor_preco"] is not None else 999999,
             g["assinatura"]
         )
@@ -234,5 +330,5 @@ def comparar_produtos(
         "q": q,
         "tokens_q": tokens_q,
         "total_grupos": len(grupos_ordenados),
-        "grupos": grupos_ordenados
+        "grupos": grupos_ordenados[:limit_produtos]
     }

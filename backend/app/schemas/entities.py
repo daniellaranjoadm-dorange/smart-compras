@@ -78,11 +78,14 @@ class CategoriaRead(CategoriaCreate):
 
 
 class ProdutoCreate(BaseModel):
+    assinatura: str | None = None
+    assinatura: str | None = None
     nome: str
     categoria_id: int | None = None
 
 
 class ProdutoRead(ProdutoCreate):
+    assinatura: str | None = None
     id: int
     model_config = ConfigDict(from_attributes=True)
 

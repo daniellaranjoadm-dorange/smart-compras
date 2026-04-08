@@ -1,4 +1,5 @@
-﻿import re
+from app.services.normalizacao_produto import gerar_assinatura_produto
+import re
 import unicodedata
 
 from fastapi import APIRouter, Depends, Query
@@ -111,6 +112,44 @@ def assinatura_produto(nome: str):
     return assinatura, base, medida_valor, medida_unidade
 
 
+
+def dados_assinatura_do_produto(produto):
+    assinatura_salva = getattr(produto, "assinatura", None)
+
+    def montar(assinatura: str | None):
+        if not assinatura:
+            return None
+
+        partes = assinatura.split("_")
+        base = partes[0] if partes else None
+
+        medida_valor = None
+        medida_unidade = None
+
+        for token in reversed(partes):
+            m = re.match(r"^(\d+(?:\.\d+)?)(kg|g|ml|l|m|rolos)$", token)
+            if m:
+                try:
+                    medida_valor = float(m.group(1))
+                except Exception:
+                    medida_valor = None
+                medida_unidade = m.group(2)
+                break
+
+        return assinatura, base, medida_valor, medida_unidade
+
+    dados = montar(assinatura_salva)
+    if dados:
+        return dados
+
+    assinatura_nova = gerar_assinatura_produto(produto.nome)
+    dados = montar(assinatura_nova)
+    if dados:
+        return dados
+
+    return assinatura_produto(produto.nome)
+
+
 def produto_bloqueado(nome: str) -> bool:
     nome_norm = normalizar(nome)
 
@@ -137,6 +176,49 @@ def tokens_relevantes_query(q: str):
     return tokens
 
 
+
+
+def score_relevancia_item(base: str, medida_valor, medida_unidade) -> float:
+    if medida_valor is None or not medida_unidade:
+        return 0.0
+
+    alvo = None
+
+    if base == "cafe":
+        if medida_unidade == "g":
+            alvo = 500
+    elif base == "feijao":
+        if medida_unidade == "g":
+            alvo = 1000
+        elif medida_unidade == "kg":
+            alvo = 1
+    elif base == "arroz":
+        if medida_unidade == "g":
+            alvo = 5000
+        elif medida_unidade == "kg":
+            alvo = 5
+    elif base == "leite":
+        if medida_unidade == "ml":
+            alvo = 1000
+        elif medida_unidade == "l":
+            alvo = 1
+    elif base == "acucar":
+        if medida_unidade == "g":
+            alvo = 1000
+        elif medida_unidade == "kg":
+            alvo = 1
+    elif base == "oleo":
+        if medida_unidade == "ml":
+            alvo = 900
+        elif medida_unidade == "l":
+            alvo = 0.9
+
+    if alvo is None:
+        return 1.0
+
+    return 100000.0 - abs(float(medida_valor) - float(alvo))
+
+
 def produto_valido_para_item(termo: str, nome_produto: str, medida_valor):
     termo_norm = normalizar(termo)
     nome_norm = normalizar(nome_produto)
@@ -157,7 +239,7 @@ def produto_valido_para_item(termo: str, nome_produto: str, medida_valor):
 
 
 def ofertas_para_item(db: Session, termo: str, categoria: str | None):
-    tokens_q = tokens_relevantes_query(termo)
+    termo_norm = normalizar(termo).strip()
 
     consulta = db.query(Produto, Categoria).outerjoin(Categoria, Produto.categoria_id == Categoria.id)
 
@@ -169,20 +251,21 @@ def ofertas_para_item(db: Session, termo: str, categoria: str | None):
     ofertas = []
 
     for produto, categoria_obj in produtos_encontrados:
-        nome_norm = normalizar(produto.nome)
-
         if produto_bloqueado(produto.nome):
             continue
 
-        if tokens_q and not all(token in nome_norm for token in tokens_q):
+        assinatura, base, medida_valor, medida_unidade = dados_assinatura_do_produto(produto)
+
+        if not assinatura or not base:
             continue
 
-        assinatura, base, medida_valor, medida_unidade = assinatura_produto(produto.nome)
+        base_norm = normalizar(base).strip()
 
-        if medida_valor is None:
+        # matching semântico exato por base
+        if base_norm != termo_norm:
             continue
 
-        if not produto_valido_para_item(termo, produto.nome, medida_valor):
+        if medida_valor is None or not medida_unidade:
             continue
 
         precos_raw = (
@@ -215,7 +298,18 @@ def ofertas_para_item(db: Session, termo: str, categoria: str | None):
                 "cidade": cidade.nome
             })
 
-    ofertas = sorted(ofertas, key=lambda x: x["preco"])
+    ofertas = sorted(
+        ofertas,
+        key=lambda x: (
+            -score_relevancia_item(
+                x.get("base"),
+                x.get("medida_valor"),
+                x.get("medida_unidade"),
+            ),
+            x["preco"],
+        )
+    )
+
     return ofertas
 
 
@@ -264,8 +358,26 @@ def calcular_cesta(
                 }
 
             atual = totais_por_unidade[chave]["itens"].get(item)
-            if atual is None or oferta["preco"] < atual["preco"]:
+
+            if atual is None:
                 totais_por_unidade[chave]["itens"][item] = oferta
+            else:
+                score_atual = score_relevancia_item(
+                    atual.get("base"),
+                    atual.get("medida_valor"),
+                    atual.get("medida_unidade"),
+                )
+                score_novo = score_relevancia_item(
+                    oferta.get("base"),
+                    oferta.get("medida_valor"),
+                    oferta.get("medida_unidade"),
+                )
+
+                if (
+                    score_novo > score_atual or
+                    (score_novo == score_atual and oferta["preco"] < atual["preco"])
+                ):
+                    totais_por_unidade[chave]["itens"][item] = oferta
 
     mercados_analisados = []
 
