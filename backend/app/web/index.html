@@ -1,779 +1,328 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Compras</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 24px;
-      background: #f7f7f7;
-    }
-    h1, h2, h3 { margin-bottom: 12px; }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .row-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-    }
-    input, button, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      box-sizing: border-box;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      cursor: pointer;
-      border: none;
-      background: #111827;
-      color: white;
-      font-weight: bold;
-    }
-    .muted { color: #666; font-size: 14px; }
+    body { font-family: Arial, sans-serif; max-width: 1100px; margin: 0 auto; padding: 24px; background: #f7f7f7; }
+    h1, h2 { margin-bottom: 12px; }
+    .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    input, button, select { padding: 10px; margin-top: 8px; box-sizing: border-box; }
+    button { cursor: pointer; }
+    .muted { color: #666; }
     .ok { color: green; font-weight: bold; }
     .erro { color: #b00020; font-weight: bold; }
-    .hidden { display: none; }
-    .item {
-      padding: 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      margin-top: 8px;
-      background: #fafafa;
-    }
-    .produto-card {
-      padding: 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      margin-top: 8px;
-      background: #fafafa;
-    }
-    .item-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .btn-remover-item {
-      width: auto;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 8px;
-      background: #b91c1c;
-      color: white;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .produto-nome {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-    .produtos-lista {
-      max-height: 420px;
-      overflow-y: auto;
-      white-space: normal;
-      word-break: break-word;
-    }
-    pre {
-      background: #111827;
-      color: #f9fafb;
-      padding: 12px;
-      border-radius: 8px;
-      overflow: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    #smart-auth-bar {
-      background: #111827;
-      color: white;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-    #smart-auth-logout {
-      width: auto;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: #374151;
-      color: white;
-      cursor: pointer;
-    }
+    .item { padding: 8px 0; border-bottom: 1px solid #eee; }
   </style>
 </head>
 <body>
-  <div id="smart-auth-bar">
-    <div id="smart-auth-status">Carregando sessao...</div>
-    <button id="smart-auth-logout">Sair</button>
+
+<h1>Smart Compras</h1>
+<div id="statusMsg" class="ok">Sistema iniciando...</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Criar lista</h2>
+    <input id="nomeLista" placeholder="Nome da lista" style="width:100%;">
+    <button onclick="criarLista()">Criar</button>
   </div>
 
-  <h1>Smart Compras</h1>
-  <p class="muted">Frontend com selects e autenticacao integrada</p>
+  <div class="card">
+    <h2>Adicionar item</h2>
+    <div>
+      <label>Lista</label><br>
+      <select id="listaSelect" style="width:100%;"></select>
+    </div>
+    <div>
+      <label>ID do produto</label><br>
+      <input id="produtoId" placeholder="Ex: 41" style="width:100%;">
+    </div>
+    <div>
+      <label>Quantidade</label><br>
+      <input id="quantidade" type="number" value="1" min="1" style="width:100%;">
+    </div>
+    <button onclick="adicionarItem()">Adicionar</button>
+    <button onclick="calcularCesta()">Calcular melhor cesta</button>
+  </div>
+</div>
 
-  <div id="status" class="card">
-    <h2>Status</h2>
-    <div id="statusMsg">Carregando...</div>
+<div class="row">
+  <div class="card">
+    <h2>Listas</h2>
+    <button onclick="carregarListas()">Atualizar listas</button>
+    <div id="listasOutput" class="muted">Sem dados</div>
   </div>
 
-  <div id="authBox" class="row hidden">
-    <div class="card">
-      <h2>Cadastrar</h2>
-      <form id="registerForm">
-        <input type="text" id="registerNome" placeholder="Nome" required />
-        <input type="email" id="registerEmail" placeholder="Email" required />
-        <input type="password" id="registerSenha" placeholder="Senha" required />
-        <button type="submit">Criar conta</button>
-      </form>
-      <div id="registerMsg"></div>
-    </div>
-
-    <div class="card">
-      <h2>Entrar</h2>
-      <form id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Email" required />
-        <input type="password" id="loginSenha" placeholder="Senha" required />
-        <button type="submit">Login</button>
-      </form>
-      <div id="loginMsg"></div>
-    </div>
+  <div class="card">
+    <h2>Itens</h2>
+    <button onclick="carregarItens()">Atualizar itens</button>
+    <div id="itensOutput" class="muted">Sem dados</div>
   </div>
+</div>
 
-  <div id="userBox" class="card hidden">
-    <h2>Usuario logado</h2>
-    <div id="userInfo"></div>
-  </div>
+<div class="card">
+  <h2>Resultado da Cesta</h2>
+  <div id="cestaOutput" class="muted">Sem cálculo ainda</div>
+</div>
 
-  <div id="appContent" class="hidden">
-    <div class="row">
-      <div class="card">
-        <h2>Criar lista</h2>
-        <form id="listaForm">
-          <input type="text" id="listaNome" placeholder="Nome da lista" required />
-          <button type="submit">Criar lista</button>
-        </form>
-        <div id="listaMsg"></div>
-      </div>
+<script>
+let listasCache = [];
+let produtosCache = [];
 
-      <div class="card">
-        <h2>Adicionar item</h2>
-        <form id="itemForm">
-          <label for="itemListaSelect">Lista</label>
-          <select id="itemListaSelect" required>
-            <option value="">Selecione uma lista</option>
-          </select>
+function setStatus(msg, tipo) {
+  const el = document.getElementById("statusMsg");
+  el.className = tipo || "";
+  el.textContent = msg;
+}
 
-          <label for="itemProdutoBusca">Buscar produto</label>
-          <input type="text" id="itemProdutoBusca" placeholder="Buscar produto..." />
+function formatMoney(v) {
+  const n = Number(v || 0);
+  return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
 
-          <label for="itemProdutoSelect">Produto</label>
-          <select id="itemProdutoSelect" required>
-            <option value="">Selecione um produto</option>
-          </select>
+function escapeHtml(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-          <input type="number" id="itemQuantidade" placeholder="Quantidade" value="1" required />
-          <button type="submit">Adicionar item</button>
-        </form>
-        <div id="itemMsg"></div>
-      </div>
-    </div>
+function getProdutoNome(produtoId) {
+  const idNum = Number(produtoId);
+  const produto = produtosCache.find(p => Number(p.id) === idNum);
+  return produto ? produto.nome : "Produto ID " + produtoId;
+}
 
-    <div class="row">
-      <div class="card">
-        <h2>Minhas listas</h2>
-        <button id="carregarListasBtn">Atualizar listas</button>
-        <div id="listasOutput"></div>
-      </div>
+async function carregarProdutos() {
+  const resp = await fetch("/api/produtos");
+  const data = await resp.json();
+  produtosCache = Array.isArray(data) ? data : [];
+}
 
-      <div class="card">
-        <h2>Meus itens</h2>
-        <button id="carregarItensBtn">Atualizar itens</button>
-        <div id="itensResumo" style="margin-bottom:10px;font-weight:600;"></div><div id="itensOutput"></div>
-      </div>
-    </div>
+async function carregarListas() {
+  try {
+    const resp = await fetch("/api/listas");
+    const data = await resp.json();
 
-    <div class="row-3">
-      <div class="card">
-        <h3>Produtos</h3>
-        <button id="carregarProdutosBtn">Carregar produtos</button>
-        <input type="text" id="produtosBuscaInput" placeholder="Buscar produto..." />
-<div id="produtosOutput" class="produtos-lista" data-loaded="0">Sem dados</div>
-      </div>
+    listasCache = Array.isArray(data) ? data : [];
 
-      <div class="card">
-        <h3>Cidades</h3>
-        <button id="carregarCidadesBtn">Carregar cidades</button>
-        <pre id="cidadesOutput">Sem dados</pre>
-      </div>
+    const div = document.getElementById("listasOutput");
+    const select = document.getElementById("listaSelect");
 
-      <div class="card">
-        <h3>Teste /auth/me</h3>
-        <button id="meBtn">Buscar usuario logado</button>
-        <pre id="meOutput">Sem dados</pre>
-      </div>
-    </div>
-  </div>
+    div.innerHTML = "";
+    select.innerHTML = "";
 
-  <script>
-    const API_BASE = "/api";
-    const TOKEN_KEY = "smartcompras_token";
-
-    let listasCache = [];
-    let produtosCache = [];
-
-    function setStatus(message, type) {
-      const el = document.getElementById("statusMsg");
-      el.className = type || "";
-      el.textContent = message;
+    if (!listasCache.length) {
+      div.innerHTML = "<div class='muted'>Nenhuma lista encontrada</div>";
+      return;
     }
 
-    function setTopStatus(message) {
-      document.getElementById("smart-auth-status").textContent = message;
-    }
+    listasCache.forEach(l => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.textContent = l.id + " - " + l.nome;
+      div.appendChild(el);
 
-    function setMessage(id, message, type) {
-      const el = document.getElementById(id);
-      el.className = type || "";
-      el.textContent = message;
-    }
+      const opt = document.createElement("option");
+      opt.value = l.id;
+      opt.textContent = l.nome;
+      select.appendChild(opt);
+    });
 
-    function saveToken(token) {
-      localStorage.setItem(TOKEN_KEY, token);
-    }
-
-    function getToken() {
-      return localStorage.getItem(TOKEN_KEY);
-    }
-
-    function clearToken() {
-      localStorage.removeItem(TOKEN_KEY);
-    }
-
-    function getErrorMessage(data, fallback) {
-      if (!data) return fallback;
-      if (typeof data.detail === "string") return data.detail;
-      if (Array.isArray(data.detail)) {
-        return data.detail.map(function(x) { return x.msg; }).join(" | ");
-      }
-      if (typeof data.message === "string") return data.message;
-      return fallback;
-    }
-
-    async function apiFetch(url, options) {
-      const token = getToken();
-      const headers = Object.assign({}, (options && options.headers) || {});
-      if (token) {
-        headers["Authorization"] = "Bearer " + token;
-      }
-      return fetch(url, Object.assign({}, options || {}, { headers: headers }));
-    }
-
-    function showLoggedOut() {
-      document.getElementById("authBox").classList.remove("hidden");
-      document.getElementById("userBox").classList.add("hidden");
-      document.getElementById("appContent").classList.add("hidden");
-      setTopStatus("Nao autenticado");
-      setStatus("Nao autenticado");
-    }
-
-    function showLoggedIn(user) {
-      document.getElementById("authBox").classList.add("hidden");
-      document.getElementById("userBox").classList.remove("hidden");
-      document.getElementById("appContent").classList.remove("hidden");
-
-      document.getElementById("userInfo").innerHTML =
-        "<strong>ID:</strong> " + user.id + "<br>" +
-        "<strong>Nome:</strong> " + user.nome + "<br>" +
-        "<strong>Email:</strong> " + user.email;
-
-      setTopStatus("Logado como " + user.nome + " (" + user.email + ")");
-      setStatus("Autenticado como " + user.nome, "ok");
-    }
-
-    function preencherSelectListas() {
-      const select = document.getElementById("itemListaSelect");
-      select.innerHTML = '<option value="">Selecione uma lista</option>';
-
-      listasCache.forEach(function(lista) {
-        const option = document.createElement("option");
-        option.value = String(lista.id);
-        option.textContent = "#" + lista.id + " - " + lista.nome;
-        select.appendChild(option);
-      });
-    }
-
-    function preencherSelectProdutos() {
-      const select = document.getElementById("itemProdutoSelect");
-      if (!select) return;
-      select.innerHTML = '<option value="">Selecione um produto</option>';
-    }
-
-    function getProdutoNome(produtoId) {
-      const idNum = Number(produtoId);
-      const produto = produtosCache.find(function(p) { return Number(p.id) === idNum; });
-      return produto ? produto.nome : "Produto ID: " + produtoId;
-    }
-
-    function renderProdutos(produtos, filtro) {
-      const output = document.getElementById("produtosOutput");
-      if (!output) return;
-
-      const termo = (filtro || "").toLowerCase().trim();
-      const lista = (produtos || []).filter(function(produto) {
-        if (!termo) return true;
-        const nome = String(produto.nome || "").toLowerCase();
-        return nome.includes(termo) || String(produto.id).includes(termo);
-      });
-
-      if (!lista.length) {
-        output.innerHTML = "<div class='muted'>Nenhum produto encontrado</div>";
-        return;
-      }
-
-      output.innerHTML = "";
-      atualizarResumoItens(itens);
-      lista.forEach(function(produto) {
-        const div = document.createElement("div");
-        div.className = "produto-card";
-        div.innerHTML =
-          "<div class='produto-nome'>" + produto.nome + "</div>" +
-          "<div><strong>Categoria ID:</strong> " + (produto.categoria_id ?? "N/A") + "</div>";
-        output.appendChild(div);
-      });
-    }
-
-    async function loadCurrentUser() {
-      const token = getToken();
-
-      if (!token) {
-        showLoggedOut();
-        return null;
-      }
-
-      setTopStatus("Verificando sessao...");
-      setStatus("Verificando sessao...");
-
-      try {
-        const response = await apiFetch(API_BASE + "/auth/me");
-
-        if (!response.ok) {
-          clearToken();
-          showLoggedOut();
-          return null;
-        }
-
-        const user = await response.json();
-        showLoggedIn(user);
-        return user;
-      } catch (error) {
-        console.error("Erro ao validar sessao:", error);
-        clearToken();
-        showLoggedOut();
-        setStatus("Erro ao validar sessao", "erro");
-        return null;
-      }
-    }
-
-    function renderListas(listas) {
-      const output = document.getElementById("listasOutput");
-
-      if (!listas.length) {
-        output.innerHTML = "<div class='muted'>Nenhuma lista encontrada</div>";
-        return;
-      }
-
-      output.innerHTML = "";
-      atualizarResumoItens(itens);
-      listas.forEach(function(lista) {
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML =
-          "<strong>ID:</strong> " + lista.id + "<br>" +
-          "<strong>Nome:</strong> " + lista.nome;
-        output.appendChild(div);
-      });
-    }
-
-    
-function atualizarResumoItens(itens) {
-  const total = itens.reduce((acc, i) => acc + (i.quantidade || 0), 0);
-  const el = document.getElementById("itensResumo");
-  if (el) {
-    el.textContent = "Total de itens: " + total;
+    setStatus("Listas carregadas", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao carregar listas", "erro");
   }
 }
 
-function renderItens(itens) {
-      const output = document.getElementById("itensOutput");
+async function criarLista() {
+  const nome = document.getElementById("nomeLista").value.trim();
 
-      if (!itens.length) {
-        output.innerHTML = "<div class='muted'>Nenhum item encontrado</div>";
-        return;
-      }
+  if (!nome) {
+    setStatus("Informe o nome da lista", "erro");
+    return;
+  }
 
-      output.innerHTML = "";
-      atualizarResumoItens(itens);
-      itens.forEach(function(item) {
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML =
-          "<div class='item-top'>" +
-            "<div>" +
-              "<strong>Produto:</strong> " + getProdutoNome(item.produto_id) + "<br>" +
-              "<strong>Quantidade:</strong> " + item.quantidade +
-            "</div>" +
-            "<button class='btn-remover-item' data-item-id='" + item.id + "'>Remover</button>" +
-          "</div>";
-        output.appendChild(div);
-      });
+  try {
+    const resp = await fetch("/api/listas", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ nome: nome, usuario_id: 1 })
+    });
 
-      output.querySelectorAll(".btn-remover-item").forEach(function(btn) {
-        btn.addEventListener("click", async function() {
-          const itemId = this.getAttribute("data-item-id");
-          if (!confirm("Remover este item?")) return;
-
-          try {
-            const response = await apiFetch(API_BASE + "/itens/" + itemId, {
-              method: "DELETE"
-            });
-
-            if (!response.ok) {
-              let data = null;
-              try { data = await response.json(); } catch (e) {}
-              throw new Error(getErrorMessage(data, "Erro ao remover item"));
-            }
-
-            await carregarItens();
-          } catch (error) {
-            alert(error.message || "Erro ao remover item");
-          }
-        });
-      });
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao criar lista");
     }
 
-    async function carregarListas() {
-      const response = await apiFetch(API_BASE + "/listas");
-      const data = await response.json();
+    document.getElementById("nomeLista").value = "";
+    await carregarListas();
+    setStatus("Lista criada com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao criar lista", "erro");
+  }
+}
 
-      if (!response.ok) {
-        throw new Error(getErrorMessage(data, "Erro ao carregar listas"));
-      }
+async function adicionarItem() {
+  const lista_id = Number(document.getElementById("listaSelect").value);
+  const produto_id = Number(document.getElementById("produtoId").value);
+  const quantidade = Number(document.getElementById("quantidade").value || 1);
 
-      listasCache = data;
-      renderListas(data);
-      preencherSelectListas();
+  if (!lista_id || !produto_id || !quantidade) {
+    setStatus("Preencha lista, produto e quantidade", "erro");
+    return;
+  }
+
+  try {
+    const resp = await fetch("/api/itens", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        lista_id: lista_id,
+        produto_id: produto_id,
+        quantidade: quantidade
+      })
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao adicionar item");
     }
 
-    async function carregarItens() {
-      if (!Array.isArray(produtosCache) || !produtosCache.length) {
-        try {
-          await carregarProdutos(true);
-        } catch (e) {}
-      }
+    await carregarItens();
+    setStatus("Item adicionado com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao adicionar item", "erro");
+  }
+}
 
-      const response = await apiFetch(API_BASE + "/itens");
-      const data = await response.json();
+async function carregarItens() {
+  try {
+    const resp = await fetch("/api/itens");
+    const data = await resp.json();
 
-      if (!response.ok) {
-        throw new Error(getErrorMessage(data, "Erro ao carregar itens"));
-      }
+    const div = document.getElementById("itensOutput");
+    div.innerHTML = "";
 
-      renderItens(data);
+    if (!Array.isArray(data) || !data.length) {
+      div.innerHTML = "<div class='muted'>Nenhum item encontrado</div>";
+      return;
     }
 
-    async function carregarProdutos(force = false) {
-      if (!force && Array.isArray(produtosCache) && produtosCache.length) {
-        const busca = document.getElementById("produtosBuscaInput");
-        renderProdutos(produtosCache, busca ? busca.value : "");
-        return;
-      }
+    data.forEach(item => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML =
+        "<strong>ID:</strong> " + item.id + "<br>" +
+        "<strong>Lista ID:</strong> " + item.lista_id + "<br>" +
+        "<strong>Produto:</strong> " + escapeHtml(getProdutoNome(item.produto_id)) + "<br>" +
+        "<strong>Quantidade:</strong> " + item.quantidade;
+      div.appendChild(el);
+    });
 
-      const response = await apiFetch(API_BASE + "/produtos");
-      const data = await response.json();
+    setStatus("Itens carregados", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao carregar itens", "erro");
+  }
+}
 
-      if (!response.ok) {
-        throw new Error(getErrorMessage(data, "Erro ao carregar produtos"));
-      }
+function mostrarResultadoCesta(data) {
+  const div = document.getElementById("cestaOutput");
 
-      produtosCache = data;
-      preencherSelectProdutos();
-      const busca = document.getElementById("produtosBuscaInput");
-      renderProdutos(data, busca ? busca.value : "");
-      const itensOutput = document.getElementById("itensOutput");
-      if (itensOutput && itensOutput.innerHTML && itensOutput.innerHTML.indexOf("Produto ID:") !== -1) {
-        try { await carregarItens(); } catch (e) {}
-      }
+  if (!data || !data.itens_encontrados || !data.itens_encontrados.length) {
+    div.innerHTML = "<div class='muted'>Nenhum item encontrado na cesta</div>";
+    return;
+  }
+
+  let html = "";
+
+  html += "<div class='item'><strong>Total melhor por item:</strong> " + formatMoney(data.total_cesta_melhor_por_item || 0) + "</div>";
+
+  if (data.melhor_mercado_cesta) {
+    html += "<div class='item'>" +
+      "<strong>Melhor mercado:</strong> " + escapeHtml(data.melhor_mercado_cesta.unidade_nome || "") + "<br>" +
+      "<strong>Rede:</strong> " + escapeHtml(data.melhor_mercado_cesta.rede || "") + "<br>" +
+      "<strong>Cidade:</strong> " + escapeHtml(data.melhor_mercado_cesta.cidade || "") + "<br>" +
+      "<strong>Total no mercado:</strong> " + formatMoney(data.melhor_mercado_cesta.total || 0) +
+      "</div>";
+  }
+
+  if (data.economia_absoluta != null) {
+    html += "<div class='item'><strong>Economia:</strong> " + formatMoney(data.economia_absoluta) + " (" + (data.economia_percentual ?? 0) + "%)</div>";
+  }
+
+  html += "<h3>Itens encontrados</h3>";
+
+  data.itens_encontrados.forEach(i => {
+    html += "<div class='item'>" +
+      "<strong>Consulta:</strong> " + escapeHtml(i.query_item || "") + "<br>" +
+      "<strong>Produto:</strong> " + escapeHtml(i.produto_nome || "") + "<br>" +
+      "<strong>Preço:</strong> " + formatMoney(i.preco || 0) + "<br>" +
+      "<strong>Unidade:</strong> " + escapeHtml(i.unidade_nome || "") + "<br>" +
+      "<strong>Rede:</strong> " + escapeHtml(i.rede || "") + " / " + escapeHtml(i.cidade || "") +
+      "</div>";
+  });
+
+  if (data.itens_nao_encontrados && data.itens_nao_encontrados.length) {
+    html += "<h3>Não encontrados</h3>";
+    data.itens_nao_encontrados.forEach(nome => {
+      html += "<div class='item'>" + escapeHtml(nome) + "</div>";
+    });
+  }
+
+  div.innerHTML = html;
+}
+
+async function calcularCesta() {
+  const lista_id = Number(document.getElementById("listaSelect").value);
+
+  if (!lista_id) {
+    setStatus("Selecione uma lista", "erro");
+    return;
+  }
+
+  try {
+    const respItens = await fetch("/api/itens");
+    const itens = await respItens.json();
+
+    const itensLista = (Array.isArray(itens) ? itens : []).filter(i => Number(i.lista_id) === lista_id);
+
+    if (!itensLista.length) {
+      setStatus("Lista sem itens", "erro");
+      document.getElementById("cestaOutput").innerHTML = "<div class='muted'>Lista sem itens</div>";
+      return;
     }
 
-    document.getElementById("registerForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      setMessage("registerMsg", "Criando usuario...");
+    const nomes = itensLista.map(i => getProdutoNome(i.produto_id));
+    const query = nomes.join(",");
 
-      const form = new URLSearchParams();
-      form.append("nome", document.getElementById("registerNome").value);
-      form.append("email", document.getElementById("registerEmail").value);
-      form.append("senha", document.getElementById("registerSenha").value);
+    const resp = await fetch("/api/catalogo/cesta?itens=" + encodeURIComponent(query) + "&categoria=mercearia");
+    const data = await resp.json();
 
-      try {
-        const response = await fetch(API_BASE + "/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: form.toString()
-        });
+    mostrarResultadoCesta(data);
+    setStatus("Cesta calculada", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao calcular cesta", "erro");
+  }
+}
 
-        const data = await response.json();
+async function init() {
+  await carregarProdutos();
+  await carregarListas();
+  await carregarItens();
+  setStatus("Sistema pronto", "ok");
+}
 
-        if (!response.ok) {
-          setMessage("registerMsg", getErrorMessage(data, "Erro ao cadastrar"), "erro");
-          return;
-        }
+init();
+</script>
 
-        setMessage("registerMsg", "Usuario criado com sucesso. Agora faca login.", "ok");
-        document.getElementById("registerForm").reset();
-      } catch (error) {
-        console.error(error);
-        setMessage("registerMsg", "Erro de conexao no cadastro", "erro");
-      }
-    });
-
-    document.getElementById("loginForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      setMessage("loginMsg", "Entrando...");
-
-      const form = new URLSearchParams();
-      form.append("email", document.getElementById("loginEmail").value);
-      form.append("senha", document.getElementById("loginSenha").value);
-
-      try {
-        const response = await fetch(API_BASE + "/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: form.toString()
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setMessage("loginMsg", getErrorMessage(data, "Erro no login"), "erro");
-          return;
-        }
-
-        saveToken(data.access_token);
-        setMessage("loginMsg", "Login realizado com sucesso", "ok");
-        await loadCurrentUser();
-        await carregarListas();
-        await carregarItens();
-        await carregarProdutos();
-      } catch (error) {
-        console.error(error);
-        setMessage("loginMsg", "Erro de conexao no login", "erro");
-      }
-    });
-
-    document.getElementById("smart-auth-logout").addEventListener("click", function () {
-      clearToken();
-      listasCache = [];
-      produtosCache = [];
-      showLoggedOut();
-      document.getElementById("meOutput").textContent = "Sem dados";
-      document.getElementById("listasOutput").innerHTML = "";
-      document.getElementById("itensOutput").innerHTML = "";
-      document.getElementById("produtosOutput").textContent = "Sem dados";
-      document.getElementById("cidadesOutput").textContent = "Sem dados";
-      preencherSelectListas();
-      preencherSelectProdutos();
-    });
-
-    document.getElementById("listaForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      setMessage("listaMsg", "Criando lista...");
-
-      const body = JSON.stringify({
-        nome: document.getElementById("listaNome").value
-      });
-
-      try {
-        const response = await apiFetch(API_BASE + "/listas", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: body
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setMessage("listaMsg", getErrorMessage(data, "Erro ao criar lista"), "erro");
-          return;
-        }
-
-        setMessage("listaMsg", "Lista criada com sucesso", "ok");
-        document.getElementById("listaForm").reset();
-        await carregarListas();
-      } catch (error) {
-        console.error(error);
-        setMessage("listaMsg", "Erro de conexao ao criar lista", "erro");
-      }
-    });
-
-    document.getElementById("itemForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-      setMessage("itemMsg", "Adicionando item...");
-
-      const body = JSON.stringify({
-        lista_id: Number(document.getElementById("itemListaSelect").value),
-        produto_id: Number(document.getElementById("itemProdutoSelect").value),
-        quantidade: Number(document.getElementById("itemQuantidade").value)
-      });
-
-      try {
-        const response = await apiFetch(API_BASE + "/itens", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: body
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          setMessage("itemMsg", getErrorMessage(data, "Erro ao adicionar item"), "erro");
-          return;
-        }
-
-        setMessage("itemMsg", "Item adicionado com sucesso", "ok");
-        document.getElementById("itemForm").reset();
-        document.getElementById("itemQuantidade").value = 1;
-        document.getElementById("itemProdutoBusca").value = "";
-        preencherSelectListas();
-        preencherSelectProdutos();
-        await carregarItens();
-      } catch (error) {
-        console.error(error);
-        setMessage("itemMsg", "Erro de conexao ao adicionar item", "erro");
-      }
-    });
-
-    document.getElementById("carregarListasBtn").addEventListener("click", async function () {
-      try {
-        await carregarListas();
-      } catch (error) {
-        document.getElementById("listasOutput").innerHTML = "<div class='erro'>" + error.message + "</div>";
-      }
-    });
-
-    document.getElementById("carregarItensBtn").addEventListener("click", async function () {
-      try {
-        await carregarItens();
-      } catch (error) {
-        document.getElementById("itensOutput").innerHTML = "<div class='erro'>" + error.message + "</div>";
-      }
-    });
-
-    document.getElementById("carregarProdutosBtn").addEventListener("click", async function () {
-      const output = document.getElementById("produtosOutput");
-      const btn = document.getElementById("carregarProdutosBtn");
-
-      try {
-        if (output.dataset.loaded === "1") {
-          output.innerHTML = "Sem dados";
-          output.dataset.loaded = "0";
-          btn.textContent = "Carregar produtos";
-          return;
-        }
-
-        await carregarProdutos(true);
-        output.dataset.loaded = "1";
-        btn.textContent = "Ocultar produtos";
-      } catch (error) {
-        output.textContent = "Erro ao carregar produtos";
-      }
-    });
-
-    document.getElementById("produtosBuscaInput").addEventListener("input", function () {
-      renderProdutos(produtosCache, this.value);
-    });
-
-    /* SMART_BUSCA_ADD_ITEM_V2 */
-    document.getElementById("itemProdutoBusca").addEventListener("input", function () {
-      const termo = (this.value || "").toLowerCase().trim();
-      const select = document.getElementById("itemProdutoSelect");
-      if (!select) return;
-
-      select.innerHTML = '<option value="">Selecione um produto</option>';
-
-      if (termo.length < 2) {
-        return;
-      }
-
-      const encontrados = produtosCache
-        .filter(function(produto) {
-          const nome = String(produto.nome || "").toLowerCase();
-          return nome.includes(termo);
-        })
-        .slice(0, 50);
-
-      encontrados.forEach(function(produto) {
-        const option = document.createElement("option");
-        option.value = String(produto.id);
-        option.textContent = produto.nome;
-        select.appendChild(option);
-      });
-
-      if (encontrados.length === 1) {
-        select.value = String(encontrados[0].id);
-      }
-    });
-
-    document.getElementById("carregarCidadesBtn").addEventListener("click", async function () {
-      try {
-        const response = await apiFetch(API_BASE + "/cidades");
-        const data = await response.json();
-        document.getElementById("cidadesOutput").textContent = JSON.stringify(data, null, 2);
-      } catch (error) {
-        document.getElementById("cidadesOutput").textContent = "Erro ao carregar cidades";
-      }
-    });
-
-    document.getElementById("meBtn").addEventListener("click", async function () {
-      try {
-        const response = await apiFetch(API_BASE + "/auth/me");
-        const text = await response.text();
-        document.getElementById("meOutput").textContent = text;
-      } catch (error) {
-        document.getElementById("meOutput").textContent = "Erro ao consultar /auth/me";
-      }
-    });
-
-    async function init() {
-      preencherSelectListas();
-      preencherSelectProdutos();
-
-      const user = await loadCurrentUser();
-      if (user) {
-        try { await carregarListas(); } catch (e) {}
-        try { await carregarItens(); } catch (e) {}
-        try { await carregarProdutos(); } catch (e) {}
-      }
-    }
-
-    init();
-  </script>
 </body>
 </html>

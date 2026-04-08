@@ -11,6 +11,7 @@ from app.models.entities import Base
 from app.routes import admin
 from app.routes import produtos
 from app.routes import comparacao
+from app.routes import cesta
 
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
@@ -24,6 +25,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(admin.router)
 app.include_router(produtos.router)
 app.include_router(comparacao.router)
+app.include_router(cesta.router)
 
 def on_startup():
     Base.metadata.create_all(bind=engine)

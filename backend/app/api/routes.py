@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+from sqlalchemy import true
 import csv
 import io
 
@@ -23,8 +24,7 @@ from app.models.entities import (
     Produto,
     RedeMercado,
     UnidadeMercado,
-    Usuario,
-)
+    Usuario)
 from app.schemas.entities import (
     CategoriaCreate,
     CategoriaRead,
@@ -55,13 +55,11 @@ from app.schemas.entities import (
     UnidadeMercadoCreate,
     UnidadeMercadoRead,
     UsuarioCreate,
-    UsuarioRead,
-)
+    UsuarioRead)
 from app.services.comparacao_local import (
     comparar_lista_otimizada_por_cidade,
     comparar_lista_por_cidade,
-    gerar_resumo_inteligente_compra,
-)
+    gerar_resumo_inteligente_compra)
 
 Base.metadata.create_all(bind=engine)
 
@@ -216,9 +214,7 @@ def criar_lista_modelo(payload: ListaModeloCreate, db: Session = Depends(get_db)
 
 @router.get("/listas-modelo", response_model=list[ListaModeloRead])
 def listar_listas_modelo(
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     return db.query(ListaModelo).filter(
         ListaModelo.usuario_id == usuario.id
     ).order_by(ListaModelo.nome).all()
@@ -227,9 +223,7 @@ def listar_listas_modelo(
 @router.post("/itens-lista-modelo", response_model=ItemListaModeloRead)
 def criar_item_lista_modelo(
     payload: ItemListaModeloCreate,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     lista_modelo = db.query(ListaModelo).filter(
         ListaModelo.id == payload.lista_modelo_id,
         ListaModelo.usuario_id == usuario.id
@@ -248,7 +242,7 @@ def criar_item_lista_modelo(
 @router.get("/itens-lista-modelo", response_model=list[ItemListaModeloRead])
 def listar_itens_lista_modelo(
     db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user),
+
     lista_modelo_id: int | None = None
 ):
     query = db.query(ItemListaModelo).join(
@@ -263,36 +257,34 @@ def listar_itens_lista_modelo(
 
 @router.post("/listas", response_model=ListaCompraRead)
 def criar_lista(
-    payload: ListaCompraCreate,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
+    payload: dict,
+    db: Session = Depends(get_db)
 ):
-    dados = payload.model_dump()
-    dados["usuario_id"] = usuario.id
+    nome = payload.get("nome")
+    if not nome:
+        raise HTTPException(status_code=400, detail="Campo nome e obrigatorio.")
 
-    item = ListaCompra(**dados)
+    usuario_id = payload.get("usuario_id") or 1
+
+    item = ListaCompra(
+        nome=nome,
+        usuario_id=usuario_id
+    )
     db.add(item)
     db.commit()
     db.refresh(item)
     return item
 
-
 @router.get("/listas", response_model=list[ListaCompraRead])
 def listar_listas(
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
-    return db.query(ListaCompra).filter(
-        ListaCompra.usuario_id == usuario.id
-    ).order_by(ListaCompra.nome).all()
-
+    return db.query(ListaCompra).order_by(ListaCompra.nome).all()
 
 @router.post("/listas-modelo/{lista_modelo_id}/gerar", response_model=ListaCompraRead)
 def gerar_lista_de_modelo(
     lista_modelo_id: int,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     modelo = db.query(ListaModelo).filter(
     ListaModelo.id == lista_modelo_id,
     ListaModelo.usuario_id == usuario.id
@@ -307,8 +299,7 @@ def gerar_lista_de_modelo(
         usuario_id=modelo.usuario_id,
         nome=nome_lista,
         gerada_de_modelo_id=modelo.id,
-        gerada_em=agora,
-    )
+        gerada_em=agora)
     db.add(nova_lista)
     db.commit()
     db.refresh(nova_lista)
@@ -319,8 +310,7 @@ def gerar_lista_de_modelo(
         novo_item = ItemListaCompra(
             lista_id=nova_lista.id,
             produto_id=item.produto_id,
-            quantidade=item.quantidade,
-        )
+            quantidade=item.quantidade)
         db.add(novo_item)
 
     db.commit()
@@ -331,12 +321,10 @@ def gerar_lista_de_modelo(
 @router.post("/itens", response_model=ItemListaCompraRead)
 def criar_item(
     payload: ItemListaCompraCreate,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     lista = db.query(ListaCompra).filter(
-        ListaCompra.id == payload.lista_id,
-        ListaCompra.usuario_id == usuario.id
+        ListaCompra.id == payload.lista_id
     ).first()
 
     if not lista:
@@ -348,31 +336,22 @@ def criar_item(
     db.refresh(item)
     return item
 
-
 @router.get("/itens", response_model=list[ItemListaCompraRead])
 def listar_itens(
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
-    return db.query(ItemListaCompra).join(
-        ListaCompra, ItemListaCompra.lista_id == ListaCompra.id
-    ).filter(
-        ListaCompra.usuario_id == usuario.id
-    ).all()
-
+    return db.query(ItemListaCompra).all()
 
 @router.post("/precos", response_model=PrecoProdutoRead)
 def criar_preco(payload: PrecoProdutoCreate, db: Session = Depends(get_db)):
     existente = db.query(PrecoProduto).filter(
         PrecoProduto.produto_id == payload.produto_id,
-        PrecoProduto.unidade_id == payload.unidade_id,
-    ).first()
+        PrecoProduto.unidade_id == payload.unidade_id).first()
 
     historico = HistoricoPreco(
         produto_id=payload.produto_id,
         unidade_id=payload.unidade_id,
-        preco=payload.preco,
-    )
+        preco=payload.preco)
     db.add(historico)
 
     if existente:
@@ -431,8 +410,7 @@ def importar_precos_csv(arquivo: UploadFile = File(...), db: Session = Depends(g
 
             existente = db.query(PrecoProduto).filter(
                 PrecoProduto.produto_id == produto_id,
-                PrecoProduto.unidade_id == unidade_id,
-            ).first()
+                PrecoProduto.unidade_id == unidade_id).first()
 
             historico = HistoricoPreco(produto_id=produto_id, unidade_id=unidade_id, preco=preco)
             db.add(historico)
@@ -473,12 +451,10 @@ def listar_historico_precos(db: Session = Depends(get_db)):
 def comparar_por_cidade(
     cidade_id: int,
     lista_id: int,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     lista = db.query(ListaCompra).filter(
         ListaCompra.id == lista_id,
-        ListaCompra.usuario_id == usuario.id
+        True
     ).first()
 
     if not lista:
@@ -494,12 +470,10 @@ def comparar_por_cidade(
 def comparar_por_cidade_otimizada(
     cidade_id: int,
     lista_id: int,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     lista = db.query(ListaCompra).filter(
         ListaCompra.id == lista_id,
-        ListaCompra.usuario_id == usuario.id
+        True
     ).first()
 
     if not lista:
@@ -515,12 +489,10 @@ def comparar_por_cidade_otimizada(
 def resumo_inteligente(
     cidade_id: int,
     lista_id: int,
-    db: Session = Depends(get_db),
-    usuario: Usuario = Depends(get_current_user)
-):
+    db: Session = Depends(get_db)):
     lista = db.query(ListaCompra).filter(
         ListaCompra.id == lista_id,
-        ListaCompra.usuario_id == usuario.id
+        True
     ).first()
 
     if not lista:
@@ -553,10 +525,9 @@ def buscar_produtos(q: str = "", limit: int = 20, db: Session = Depends(get_db))
 
 
 @router.delete("/itens/{item_id}")
-def deletar_item(item_id: int, db: Session = Depends(get_db), usuario=Depends(get_current_user)):
-    item = db.query(ItemListaCompra).join(ListaCompra, ItemListaCompra.lista_id == ListaCompra.id).filter(
-        ItemListaCompra.id == item_id,
-        ListaCompra.usuario_id == usuario.id
+def deletar_item(item_id: int, db: Session = Depends(get_db)):
+    item = db.query(ItemListaCompra).filter(
+        ItemListaCompra.id == item_id
     ).first()
 
     if not item:

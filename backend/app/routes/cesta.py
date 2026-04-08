@@ -267,7 +267,7 @@ def calcular_cesta(
             if atual is None or oferta["preco"] < atual["preco"]:
                 totais_por_unidade[chave]["itens"][item] = oferta
 
-    melhores_mercados = []
+    mercados_analisados = []
 
     for unidade in totais_por_unidade.values():
         itens_cobertos = list(unidade["itens"].keys())
@@ -278,14 +278,22 @@ def calcular_cesta(
         unidade["total"] = round(total, 2)
         unidade["faltando"] = [x for x in lista_itens if x not in itens_cobertos]
 
-        melhores_mercados.append(unidade)
+        mercados_analisados.append(unidade)
 
-    melhores_mercados = sorted(
-        melhores_mercados,
+    mercados_analisados = sorted(
+        mercados_analisados,
         key=lambda x: (-x["total_itens_cobertos"], x["total"])
     )
 
-    melhor_mercado = melhores_mercados[0] if melhores_mercados else None
+    melhor_mercado = mercados_analisados[0] if mercados_analisados else None
+
+    economia_absoluta = None
+    economia_percentual = None
+
+    if melhor_mercado and melhor_mercado["total_itens_cobertos"] == len(encontrados):
+        economia_absoluta = round(melhor_mercado["total"] - round(total_melhor_por_item, 2), 2)
+        if melhor_mercado["total"] > 0:
+            economia_percentual = round((economia_absoluta / melhor_mercado["total"]) * 100, 2)
 
     return {
         "categoria": categoria,
@@ -296,5 +304,7 @@ def calcular_cesta(
         "total_itens_nao_encontrados": len(nao_encontrados),
         "total_cesta_melhor_por_item": round(total_melhor_por_item, 2),
         "melhor_mercado_cesta": melhor_mercado,
-        "mercados_analisados": melhores_mercados[:10]
+        "economia_absoluta": economia_absoluta,
+        "economia_percentual": economia_percentual,
+        "mercados_analisados": mercados_analisados[:10]
     }
