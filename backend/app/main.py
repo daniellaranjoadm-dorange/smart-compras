@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -9,6 +9,8 @@ from app.api import auth
 from app.db.base import engine
 from app.models.entities import Base
 from app.routes import admin
+from app.routes import produtos
+from app.routes import comparacao
 
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR / "web"
@@ -20,6 +22,8 @@ app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 app.include_router(router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(admin.router)
+app.include_router(produtos.router)
+app.include_router(comparacao.router)
 
 def on_startup():
     Base.metadata.create_all(bind=engine)
