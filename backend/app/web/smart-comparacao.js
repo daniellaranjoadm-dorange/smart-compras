@@ -229,7 +229,6 @@ const mapProdutos = {};
 (produtos || []).forEach(p => mapProdutos[p.id] = p.nome);
 
 status.textContent = `Total de itens: ${itens.length}`;
-renderResumoLista(itens);
 
 if (!itens.length) {
   container.innerHTML = "Essa lista ainda não tem itens.";
@@ -343,36 +342,4 @@ async function removerItem(id) {
   } catch (e) {
     alert("Erro ao remover: " + e);
   }
-}
-
-function renderResumoLista(itens) {
-  const container = document.getElementById("resumoLista");
-  if (!container) return;
-
-  const totalItens = itens.length;
-  const totalQtd = itens.reduce((acc, i) => acc + Number(i.quantidade || 0), 0);
-
-  container.innerHTML = `
-    <div style="
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-      margin-bottom:16px;
-    ">
-      <div style="padding:12px; background:#f8fafc; border-radius:10px;">
-        <div style="font-size:12px; color:#64748b;">Itens</div>
-        <div style="font-size:20px; font-weight:800;">${totalItens}</div>
-      </div>
-
-      <div style="padding:12px; background:#f8fafc; border-radius:10px;">
-        <div style="font-size:12px; color:#64748b;">Quantidade total</div>
-        <div style="font-size:20px; font-weight:800;">${totalQtd}</div>
-      </div>
-
-      <div style="padding:12px; background:#f8fafc; border-radius:10px;">
-        <div style="font-size:12px; color:#64748b;">Custo estimado</div>
-        <div style="font-size:20px; font-weight:800;">--</div>
-      </div>
-    </div>
-  `;
 }
