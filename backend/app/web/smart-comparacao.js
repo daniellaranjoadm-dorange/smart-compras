@@ -1,15 +1,5 @@
 ﻿let listaSelecionadaId = null;
 let listasCache = [];
-let scJaInicializado = false;
-let scCarregandoListas = false;
-
-function scDebug(msg) {
-  if (typeof debugLog === "function") {
-    debugLog(msg);
-  } else {
-    console.log(msg);
-  }
-}
 
 function getEl(id) {
   return document.getElementById(id);
@@ -32,7 +22,7 @@ function renderListas() {
   if (!container) return;
 
   if (!Array.isArray(listasCache) || !listasCache.length) {
-    container.innerHTML = "Nenhuma lista criada";
+    container.innerHTML = '<div class="muted">Nenhuma lista criada</div>';
     atualizarTituloLista(null, null);
     return;
   }
@@ -42,55 +32,59 @@ function renderListas() {
   atualizarTituloLista(atual.nome, atual.id);
 
   container.innerHTML = listasCache.map(l => `
-    <div
-      data-lista-id="${l.id}"
-      onclick="selecionarLista(${l.id})"
-      style="
-        padding:8px;
-        border-bottom:1px solid #eee;
-        cursor:pointer;
-        ${Number(listaSelecionadaId) === Number(l.id) ? 'background:#eef;' : ''}
-      "
-    >
-      <b>${l.nome}</b> (ID: ${l.id})
+    <div style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      margin-bottom:8px;
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      ${Number(listaSelecionadaId) === Number(l.id) ? 'background:#dbeafe;' : 'background:#ffffff;'}
+    ">
+      <div onclick="selecionarLista(${l.id})" style="flex:1; cursor:pointer;">
+        <div style="font-weight:700; color:#111827;">${l.nome}</div>
+        <div style="font-size:12px; color:#6b7280;">ID: ${l.id}</div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button type="button" onclick="editarLista(${l.id}, ${JSON.stringify(l.nome)})" style="
+          width:auto;
+          padding:8px 10px;
+          border-radius:8px;
+          background:#0f172a;
+          color:#fff;
+          border:none;
+          cursor:pointer;
+        ">Editar</button>
+
+        <button type="button" onclick="excluirLista(${l.id})" style="
+          width:auto;
+          padding:8px 10px;
+          border-radius:8px;
+          background:#7f1d1d;
+          color:#fff;
+          border:none;
+          cursor:pointer;
+        ">Excluir</button>
+      </div>
     </div>
   `).join("");
 }
 
 async function carregarListas() {
   const container = getEl("listasContainer");
-  if (!container) {
-    scDebug("listasContainer nao encontrado");
-    return;
-  }
+  if (!container) return;
 
-  if (scCarregandoListas) {
-    scDebug("carregarListas ignorado: ja em execucao");
-    return;
-  }
-
-  scCarregandoListas = true;
-  container.innerHTML = "Carregando listas...";
-  scDebug("carregarListas iniciado");
+  container.innerHTML = '<div class="muted">Carregando listas...</div>';
 
   try {
     const resp = await apiFetch("/api/listas");
-    scDebug("GET /api/listas status=" + resp.status);
-
-    const raw = await resp.text();
-    scDebug("GET /api/listas body=" + raw);
-
-    let data = [];
-    try {
-      data = raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      container.innerHTML = "Resposta invalida ao carregar listas.";
-      scDebug("falha parse listas");
-      return;
-    }
+    const data = await resp.json();
 
     if (!resp.ok) {
-      container.innerHTML = "Erro ao carregar listas.";
+      container.innerHTML = '<div class="erro">Erro ao carregar listas</div>';
       return;
     }
 
@@ -102,30 +96,15 @@ async function carregarListas() {
 
     renderListas();
     await carregarItensDaLista();
-    sincronizarListaComparacao();
-
-    scDebug("listas renderizadas: " + listasCache.length);
   } catch (err) {
-    container.innerHTML = "Erro ao carregar listas.";
-    scDebug("catch carregarListas=" + (err && err.message ? err.message : String(err)));
-  } finally {
-    scCarregandoListas = false;
+    container.innerHTML = `<div class="erro">Erro ao carregar listas: ${err}</div>`;
   }
 }
 
 function selecionarLista(id) {
-  const lista = listasCache.find(x => Number(x.id) === Number(id));
-  if (!lista) {
-    scDebug("selecionarLista: lista nao encontrada id=" + id);
-    return;
-  }
-
   listaSelecionadaId = Number(id);
-  scDebug("lista selecionada id=" + id);
-
   renderListas();
   carregarItensDaLista();
-  sincronizarListaComparacao();
 }
 
 async function criarLista() {
@@ -146,8 +125,6 @@ async function criarLista() {
     });
 
     const raw = await resp.text();
-    scDebug("POST /api/listas status=" + resp.status);
-    scDebug("POST /api/listas body=" + raw);
 
     if (!resp.ok) {
       alert("Erro ao criar lista: " + raw);
@@ -158,7 +135,6 @@ async function criarLista() {
     try { data = raw ? JSON.parse(raw) : null; } catch (_) {}
 
     input.value = "";
-
     await carregarListas();
 
     if (data && data.id) {
@@ -166,6 +142,57 @@ async function criarLista() {
     }
   } catch (err) {
     alert("Erro ao criar lista: " + err);
+  }
+}
+
+async function editarLista(id, nomeAtual) {
+  const novoNome = prompt("Novo nome da lista:", nomeAtual);
+  if (!novoNome) return;
+
+  try {
+    const resp = await apiFetch(`/api/listas/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome: String(novoNome).trim() })
+    });
+
+    const raw = await resp.text();
+
+    if (!resp.ok) {
+      alert("Erro ao editar lista: " + raw);
+      return;
+    }
+
+    await carregarListas();
+    selecionarLista(id);
+  } catch (e) {
+    alert("Erro ao editar lista: " + e);
+  }
+}
+
+async function excluirLista(id) {
+  const confirmar = confirm("Excluir essa lista?");
+  if (!confirmar) return;
+
+  try {
+    const resp = await apiFetch(`/api/listas/${id}`, {
+      method: "DELETE"
+    });
+
+    const raw = await resp.text();
+
+    if (!resp.ok) {
+      alert("Erro ao excluir lista: " + raw);
+      return;
+    }
+
+    if (Number(listaSelecionadaId) === Number(id)) {
+      listaSelecionadaId = null;
+    }
+
+    await carregarListas();
+  } catch (e) {
+    alert("Erro ao excluir lista: " + e);
   }
 }
 
@@ -182,23 +209,10 @@ async function carregarItensDaLista() {
   }
 
   status.textContent = "Carregando itens...";
-  scDebug("carregarItensDaLista lista_id=" + listaSelecionadaId);
 
   try {
     const resp = await apiFetch("/api/itens");
-    scDebug("GET /api/itens status=" + resp.status);
-
-    const raw = await resp.text();
-    scDebug("GET /api/itens body=" + raw);
-
-    let data = [];
-    try {
-      data = raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      status.textContent = "Resposta invalida ao carregar itens";
-      container.innerHTML = "";
-      return;
-    }
+    const data = await resp.json();
 
     if (!resp.ok) {
       status.textContent = "Erro ao carregar itens";
@@ -224,7 +238,6 @@ async function carregarItensDaLista() {
   } catch (err) {
     status.textContent = "Erro ao carregar itens";
     container.innerHTML = String(err);
-    scDebug("catch carregarItensDaLista=" + (err && err.message ? err.message : String(err)));
   }
 }
 
@@ -259,8 +272,6 @@ async function adicionarItemNaLista() {
     });
 
     const raw = await resp.text();
-    scDebug("POST /api/itens status=" + resp.status);
-    scDebug("POST /api/itens body=" + raw);
 
     if (!resp.ok) {
       alert("Erro ao adicionar item: " + raw);
@@ -275,31 +286,11 @@ async function adicionarItemNaLista() {
   }
 }
 
-function sincronizarListaComparacao() {
-  const select = getEl("listaSelect");
-  if (!select || !listaSelecionadaId) return;
-
-  const existe = Array.from(select.options).some(o => Number(o.value) === Number(listaSelecionadaId));
-  if (existe) {
-    select.value = String(listaSelecionadaId);
-  }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
-  if (scJaInicializado) {
-    scDebug("init ignorado: frontend ja inicializado");
-    return;
-  }
-
-  scJaInicializado = true;
-  scDebug("smart-comparacao.js carregado");
-
   setTimeout(() => {
     const token = localStorage.getItem("smartcompras_token");
-    scDebug("token presente=" + (!!token));
-
     if (token) {
       carregarListas();
     }
-  }, 700);
+  }, 500);
 });
