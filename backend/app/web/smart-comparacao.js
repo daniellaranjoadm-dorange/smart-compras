@@ -242,24 +242,27 @@ container.innerHTML = itens.map(item => `
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
-    border-bottom:1px solid #eee;
+    padding:12px;
+    margin-bottom:8px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    background:#ffffff;
   ">
     <div>
-      <div style="font-weight:600;">
-        ${mapProdutos[item.produto_id] || 'Produto #' + item.produto_id}
+      <div style="font-weight:700; font-size:15px;">
+        ${mapProdutos[item.produto_id] || 'Produto'}
       </div>
-      <div style="font-size:12px; color:#666;">
-        Qtd: ${item.quantidade} | ID: ${item.id}
+      <div style="font-size:13px; color:#64748b;">
+        Quantidade: ${item.quantidade}
       </div>
     </div>
 
     <button onclick="removerItem(${item.id})" style="
-      background:#7f1d1d;
+      background:#dc2626;
       color:#fff;
       border:none;
-      padding:6px 10px;
-      border-radius:6px;
+      padding:8px 12px;
+      border-radius:8px;
       cursor:pointer;
     ">
       Remover
@@ -387,7 +390,12 @@ async function carregarResumoLista(listaId) {
     <div style="padding:14px; background:#fef2f2; border-radius:12px; border:1px solid #fecaca;">
       <div style="font-size:12px; color:#991b1b;">Status</div>
       <div style="font-size:20px; font-weight:800; color:#991b1b;">
-        ${data.custo_estimado > 200 ? "Caro" : "OK"}
+        ${(() => {
+  if (data.custo_estimado > 300) return "Muito caro";
+  if (data.custo_estimado > 200) return "Caro";
+  if (data.custo_estimado > 100) return "Médio";
+  return "Econômico";
+})()}
       </div>
     </div>
 
@@ -407,4 +415,6 @@ async function carregarResumoLista(listaId) {
     console.log("erro ao carregar resumo", e);
   }
 }
+
+
 
