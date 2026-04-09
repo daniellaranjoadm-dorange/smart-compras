@@ -230,6 +230,7 @@ const mapProdutos = {};
 (produtos || []).forEach(p => mapProdutos[p.id] = p.nome);
 
 status.textContent = `Total de itens: ${itens.length}`;
+await carregarComparacao();
 carregarResumoLista(listaSelecionadaId);
 
 if (!itens.length) {
@@ -417,4 +418,57 @@ async function carregarResumoLista(listaId) {
 }
 
 
+
+
+async function carregarComparacao() {
+  if (!listaSelecionadaId) return;
+
+  try {
+    const cidadeId = 1; // ajustar depois dinamico
+
+    const resp = await apiFetch(`/api/comparacao/cidade/${cidadeId}/lista/${listaSelecionadaId}/otimizada`);
+    const data = await resp.json();
+
+    renderComparacao(data);
+  } catch (e) {
+    scDebug("erro comparacao: " + e);
+  }
+}
+
+function renderComparacao(data) {
+  const el = document.getElementById("comparacaoBox");
+  if (!el) return;
+
+  if (!data || !data.melhor_opcao) {
+    el.innerHTML = "Sem comparação disponível";
+    return;
+  }
+
+  const melhor = data.melhor_opcao;
+
+  el.innerHTML = `
+    <div style="
+      border:1px solid #bbf7d0;
+      background:#ecfdf5;
+      padding:12px;
+      border-radius:10px;
+    ">
+      <div style="font-weight:700; margin-bottom:4px;">
+        🏆 Melhor opção
+      </div>
+
+      <div style="font-size:14px;">
+        ${melhor.mercado}
+      </div>
+
+      <div style="margin-top:6px; font-weight:600;">
+        Total: R$ ${melhor.total.toFixed(2)}
+      </div>
+
+      <div style="color:#16a34a; font-size:13px;">
+        Economia: R$ ${melhor.economia.toFixed(2)}
+      </div>
+    </div>
+  `;
+}
 
