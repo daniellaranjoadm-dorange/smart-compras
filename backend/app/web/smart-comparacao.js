@@ -472,3 +472,46 @@ function renderComparacao(data) {
   `;
 }
 
+
+let debounceBusca;
+
+document.addEventListener("input", async (e) => {
+  if (e.target.id !== "produtoBusca") return;
+
+  const termo = e.target.value;
+  clearTimeout(debounceBusca);
+
+  if (!termo || termo.length < 2) {
+    document.getElementById("sugestoesProdutos").innerHTML = "";
+    return;
+  }
+
+  debounceBusca = setTimeout(async () => {
+    try {
+      const resp = await apiFetch(`/api/produtos?search=${encodeURIComponent(termo)}`);
+      const produtos = await resp.json();
+
+      const box = document.getElementById("sugestoesProdutos");
+
+      box.innerHTML = (produtos || []).slice(0, 5).map(p => `
+        <div onclick="selecionarProduto(${p.id}, '${p.nome}')"
+          style="
+            padding:8px;
+            border:1px solid #eee;
+            cursor:pointer;
+            background:#fff;
+          ">
+          ${p.nome}
+        </div>
+      `).join("");
+    } catch (e) {
+      console.error(e);
+    }
+  }, 300);
+});
+
+function selecionarProduto(id, nome) {
+  document.getElementById("produtoId").value = id;
+  document.getElementById("produtoBusca").value = nome;
+  document.getElementById("sugestoesProdutos").innerHTML = "";
+}

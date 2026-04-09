@@ -1,0 +1,239 @@
+#comparacao-section-smart {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+#comparacao-section-smart h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.smart-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.smart-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  flex: 1;
+}
+
+.smart-field label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.smart-field select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.smart-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.smart-actions button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#comparacao-loading-smart {
+  display: none;
+  margin-top: 12px;
+}
+
+#comparacao-erro-smart {
+  display: none;
+  color: #c62828;
+  margin-top: 12px;
+}
+
+#comparacao-resultado-smart {
+  margin-top: 20px;
+}
+
+.smart-result-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #fafafa;
+}
+
+.smart-result-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.smart-result-subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.smart-result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.smart-result-item {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.smart-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+.smart-badge.warn {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+
+.smart-result-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.smart-kpi {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.smart-kpi-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.smart-kpi-value {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.smart-empty {
+  padding: 16px;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.smart-ok {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+.smart-warn-text {
+  color: #ef6c00;
+  font-weight: 700;
+}
+
+.smart-muted {
+  color: #666;
+}
+
+.smart-section-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.smart-result-item strong {
+  font-size: 18px;
+}
+
+
+.smart-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0 18px;
+}
+
+.smart-tab-btn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.smart-tab-btn.active {
+  border-color: #111827;
+  background: #111827;
+  color: white;
+
+  color: white;
+}
+
+.smart-view-hint {
+  margin-bottom: 14px;
+  color: #666;
+  font-size: 14px;
+}
+
+
+/* fix selects gigantes */
+select {
+  width: 100%;
+  max-width: 100%;
+  height: 48px;
+  min-height: 48px;
+}
+
+.card select,
+form select,
+select[multiple="false"] {
+  height: 48px !important;
+}
+
+
+
+/* SMART_COMPRAS_SELECT_FIX */
+select {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  overflow: hidden !important;
+}
+
+select[multiple],
+select[size] {
+  height: 48px !important;
+  max-height: 48px !important;
+}

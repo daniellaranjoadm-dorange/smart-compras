@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Compras</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 1100px; margin: 0 auto; padding: 24px; background: #f7f7f7; }
+    h1, h2 { margin-bottom: 12px; }
+    .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    input, button, select { padding: 10px; margin-top: 8px; box-sizing: border-box; }
+    button { cursor: pointer; }
+    .muted { color: #666; }
+    .ok { color: green; font-weight: bold; }
+    .erro { color: #b00020; font-weight: bold; }
+    .item { padding: 8px 0; border-bottom: 1px solid #eee; }
+  </style>
+</head>
+<body>
+
+<h1>Smart Compras</h1>
+<div id="statusMsg" class="ok">Sistema iniciando...</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Criar lista</h2>
+    <input id="nomeLista" placeholder="Nome da lista" style="width:100%;">
+    <button onclick="criarLista()">Criar</button>
+  </div>
+
+  <div class="card">
+    <h2>Adicionar item</h2>
+    <div>
+      <label>Lista</label><br>
+      <select id="listaSelect" style="width:100%;"></select>
+    </div>
+    <div>
+      <label>ID do produto</label><br>
+      <input id="produtoId" placeholder="Ex: 41" style="width:100%;">
+    </div>
+    <div>
+      <label>Quantidade</label><br>
+      <input id="quantidade" type="number" value="1" min="1" style="width:100%;">
+    </div>
+    <button onclick="adicionarItem()">Adicionar</button>
+    <button onclick="calcularCesta()">Calcular melhor cesta</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>Listas</h2>
+    <button onclick="carregarListas()">Atualizar listas</button>
+    <div id="listasOutput" class="muted">Sem dados</div>
+  </div>
+
+  <div class="card">
+    <h2>Itens</h2>
+    <button onclick="carregarItens()">Atualizar itens</button>
+    <div id="itensOutput" class="muted">Sem dados</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Resultado da Cesta</h2>
+  <div id="cestaOutput" class="muted">Sem cálculo ainda</div>
+</div>
+
+<script>
+let listasCache = [];
+let produtosCache = [];
+
+function setStatus(msg, tipo) {
+  const el = document.getElementById("statusMsg");
+  el.className = tipo || "";
+  el.textContent = msg;
+}
+
+function formatMoney(v) {
+  const n = Number(v || 0);
+  return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function escapeHtml(text) {
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getProdutoNome(produtoId) {
+  const idNum = Number(produtoId);
+  const produto = produtosCache.find(p => Number(p.id) === idNum);
+  return produto ? produto.nome : "Produto ID " + produtoId;
+}
+
+async function carregarProdutos() {
+  const resp = await fetch("/api/produtos");
+  const data = await resp.json();
+  produtosCache = Array.isArray(data) ? data : [];
+}
+
+async function carregarListas() {
+  try {
+    const resp = await fetch("/api/listas");
+    const data = await resp.json();
+
+    listasCache = Array.isArray(data) ? data : [];
+
+    const div = document.getElementById("listasOutput");
+    const select = document.getElementById("listaSelect");
+
+    div.innerHTML = "";
+    select.innerHTML = "";
+
+    if (!listasCache.length) {
+      div.innerHTML = "<div class='muted'>Nenhuma lista encontrada</div>";
+      return;
+    }
+
+    listasCache.forEach(l => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.textContent = l.id + " - " + l.nome;
+      div.appendChild(el);
+
+      const opt = document.createElement("option");
+      opt.value = l.id;
+      opt.textContent = l.nome;
+      select.appendChild(opt);
+    });
+
+    setStatus("Listas carregadas", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao carregar listas", "erro");
+  }
+}
+
+async function criarLista() {
+  const nome = document.getElementById("nomeLista").value.trim();
+
+  if (!nome) {
+    setStatus("Informe o nome da lista", "erro");
+    return;
+  }
+
+  try {
+    const resp = await fetch("/api/listas", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ nome: nome, usuario_id: 1 })
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao criar lista");
+    }
+
+    document.getElementById("nomeLista").value = "";
+    await carregarListas();
+    setStatus("Lista criada com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao criar lista", "erro");
+  }
+}
+
+async function adicionarItem() {
+  const lista_id = Number(document.getElementById("listaSelect").value);
+  const produto_id = Number(document.getElementById("produtoId").value);
+  const quantidade = Number(document.getElementById("quantidade").value || 1);
+
+  if (!lista_id || !produto_id || !quantidade) {
+    setStatus("Preencha lista, produto e quantidade", "erro");
+    return;
+  }
+
+  try {
+    const resp = await fetch("/api/itens", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        lista_id: lista_id,
+        produto_id: produto_id,
+        quantidade: quantidade
+      })
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(txt || "Falha ao adicionar item");
+    }
+
+    await carregarItens();
+    setStatus("Item adicionado com sucesso", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao adicionar item", "erro");
+  }
+}
+
+async function carregarItens() {
+  try {
+    const resp = await fetch("/api/itens");
+    const data = await resp.json();
+
+    const div = document.getElementById("itensOutput");
+    div.innerHTML = "";
+
+    if (!Array.isArray(data) || !data.length) {
+      div.innerHTML = "<div class='muted'>Nenhum item encontrado</div>";
+      return;
+    }
+
+    data.forEach(item => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML =
+        "<strong>ID:</strong> " + item.id + "<br>" +
+        "<strong>Lista ID:</strong> " + item.lista_id + "<br>" +
+        "<strong>Produto:</strong> " + escapeHtml(getProdutoNome(item.produto_id)) + "<br>" +
+        "<strong>Quantidade:</strong> " + item.quantidade;
+      div.appendChild(el);
+    });
+
+    setStatus("Itens carregados", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao carregar itens", "erro");
+  }
+}
+
+function mostrarResultadoCesta(data) {
+  const div = document.getElementById("cestaOutput");
+
+  if (!data || !data.itens_encontrados || !data.itens_encontrados.length) {
+    div.innerHTML = "<div class='muted'>Nenhum item encontrado na cesta</div>";
+    return;
+  }
+
+  let html = "";
+
+  html += "<div class='item'><strong>Total melhor por item:</strong> " + formatMoney(data.total_cesta_melhor_por_item || 0) + "</div>";
+
+  if (data.melhor_mercado_cesta) {
+    html += "<div class='item'>" +
+      "<strong>Melhor mercado:</strong> " + escapeHtml(data.melhor_mercado_cesta.unidade_nome || "") + "<br>" +
+      "<strong>Rede:</strong> " + escapeHtml(data.melhor_mercado_cesta.rede || "") + "<br>" +
+      "<strong>Cidade:</strong> " + escapeHtml(data.melhor_mercado_cesta.cidade || "") + "<br>" +
+      "<strong>Total no mercado:</strong> " + formatMoney(data.melhor_mercado_cesta.total || 0) +
+      "</div>";
+  }
+
+  if (data.economia_absoluta != null) {
+    html += "<div class='item'><strong>Economia:</strong> " + formatMoney(data.economia_absoluta) + " (" + (data.economia_percentual ?? 0) + "%)</div>";
+  }
+
+  html += "<h3>Itens encontrados</h3>";
+
+  data.itens_encontrados.forEach(i => {
+    html += "<div class='item'>" +
+      "<strong>Consulta:</strong> " + escapeHtml(i.query_item || "") + "<br>" +
+      "<strong>Produto:</strong> " + escapeHtml(i.produto_nome || "") + "<br>" +
+      "<strong>Preço:</strong> " + formatMoney(i.preco || 0) + "<br>" +
+      "<strong>Unidade:</strong> " + escapeHtml(i.unidade_nome || "") + "<br>" +
+      "<strong>Rede:</strong> " + escapeHtml(i.rede || "") + " / " + escapeHtml(i.cidade || "") +
+      "</div>";
+  });
+
+  if (data.itens_nao_encontrados && data.itens_nao_encontrados.length) {
+    html += "<h3>Não encontrados</h3>";
+    data.itens_nao_encontrados.forEach(nome => {
+      html += "<div class='item'>" + escapeHtml(nome) + "</div>";
+    });
+  }
+
+  div.innerHTML = html;
+}
+
+async function calcularCesta() {
+  const lista_id = Number(document.getElementById("listaSelect").value);
+
+  if (!lista_id) {
+    setStatus("Selecione uma lista", "erro");
+    return;
+  }
+
+  try {
+    const respItens = await fetch("/api/itens");
+    const itens = await respItens.json();
+
+    const itensLista = (Array.isArray(itens) ? itens : []).filter(i => Number(i.lista_id) === lista_id);
+
+    if (!itensLista.length) {
+      setStatus("Lista sem itens", "erro");
+      document.getElementById("cestaOutput").innerHTML = "<div class='muted'>Lista sem itens</div>";
+      return;
+    }
+
+    const nomes = itensLista.map(i => getProdutoNome(i.produto_id));
+    const query = nomes.join(",");
+
+    const resp = await fetch("/api/catalogo/cesta?itens=" + encodeURIComponent(query) + "&categoria=mercearia");
+    const data = await resp.json();
+
+    mostrarResultadoCesta(data);
+    setStatus("Cesta calculada", "ok");
+  } catch (e) {
+    console.error(e);
+    setStatus("Erro ao calcular cesta", "erro");
+  }
+}
+
+async function init() {
+  await carregarProdutos();
+  await carregarListas();
+  await carregarItens();
+  setStatus("Sistema pronto", "ok");
+}
+
+init();
+</script>
+
+</body>
+</html>
