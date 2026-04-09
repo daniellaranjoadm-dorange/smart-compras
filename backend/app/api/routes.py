@@ -575,3 +575,45 @@ def deletar_lista(
 
     return {"ok": True, "message": "Lista removida com sucesso"}
 
+
+@router.get("/listas/{lista_id}/resumo")
+def resumo_lista(lista_id: int, db: Session = Depends(get_db)):
+    itens = db.query(ItemListaCompra).filter_by(lista_id=lista_id).all()
+
+    total_itens = len(itens)
+    total_quantidade = sum(i.quantidade for i in itens)
+
+    total_custo = 0.0
+
+    for item in itens:
+        preco_atual = (
+            db.query(PrecoProduto)
+            .filter(PrecoProduto.produto_id == item.produto_id)
+            .order_by(PrecoProduto.id.desc())
+            .first()
+        )
+
+        preco_valor = None
+
+        if preco_atual:
+            preco_valor = float(preco_atual.preco)
+        else:
+            historico = (
+                db.query(HistoricoPreco)
+                .filter(HistoricoPreco.produto_id == item.produto_id)
+                .order_by(HistoricoPreco.id.desc())
+                .first()
+            )
+            if historico:
+                preco_valor = float(historico.preco)
+
+        if preco_valor is not None:
+            total_custo += preco_valor * item.quantidade
+
+    return {
+        "total_itens": total_itens,
+        "total_quantidade": total_quantidade,
+        "custo_estimado": round(total_custo, 2)
+    }
+
+

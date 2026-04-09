@@ -102,6 +102,7 @@ async function carregarListas() {
 }
 
 function selecionarLista(id) {
+  carregarResumoLista(id);
   listaSelecionadaId = Number(id);
   renderListas();
   carregarItensDaLista();
@@ -229,6 +230,7 @@ const mapProdutos = {};
 (produtos || []).forEach(p => mapProdutos[p.id] = p.nome);
 
 status.textContent = `Total de itens: ${itens.length}`;
+carregarResumoLista(listaSelecionadaId);
 
 if (!itens.length) {
   container.innerHTML = "Essa lista ainda não tem itens.";
@@ -341,5 +343,48 @@ async function removerItem(id) {
     await carregarItensDaLista();
   } catch (e) {
     alert("Erro ao remover: " + e);
+  }
+}
+
+async function carregarResumoLista(listaId) {
+  try {
+    const resp = await apiFetch(`/api/listas/${listaId}/resumo`);
+    if (!resp.ok) {
+      console.log("erro resumo status", resp.status);
+      return;
+    }
+
+    const data = await resp.json();
+
+    const el = document.getElementById("resumoLista");
+    if (!el) return;
+
+    el.innerHTML = `
+      <div style="
+        display:grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap:12px;
+        margin-bottom:16px;
+      ">
+        <div style="padding:14px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+          <div style="font-size:12px; color:#64748b;">Itens</div>
+          <div style="font-size:22px; font-weight:800;">${data.total_itens}</div>
+        </div>
+
+        <div style="padding:14px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+          <div style="font-size:12px; color:#64748b;">Quantidade</div>
+          <div style="font-size:22px; font-weight:800;">${data.total_quantidade}</div>
+        </div>
+
+        <div style="padding:14px; background:#ecfdf5; border-radius:12px; border:1px solid #bbf7d0;">
+          <div style="font-size:12px; color:#166534;">Custo estimado</div>
+          <div style="font-size:24px; font-weight:900; color:#166534;">
+            R$ ${Number(data.custo_estimado || 0).toFixed(2)}
+          </div>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    console.log("erro ao carregar resumo", e);
   }
 }
