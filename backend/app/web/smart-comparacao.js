@@ -493,17 +493,24 @@ document.addEventListener("input", async (e) => {
 
       const box = document.getElementById("sugestoesProdutos");
 
-      box.innerHTML = (produtos || []).slice(0, 5).map(p => `
-        <div onclick="selecionarProduto(${p.id}, '${p.nome}')"
-          style="
-            padding:8px;
-            border:1px solid #eee;
-            cursor:pointer;
-            background:#fff;
-          ">
-          ${p.nome}
-        </div>
-      `).join("");
+      if (!produtos || !produtos.length) {
+  box.innerHTML = "<div style='padding:8px; color:#666;'>Nenhum produto encontrado</div>";
+  return;
+}
+
+box.innerHTML = produtos.slice(0, 5).map(p => `
+  <div onclick="selecionarProduto(${p.id}, '${p.nome.replace(/'/g, "")}')"
+    style="
+      padding:10px;
+      border:1px solid #eee;
+      cursor:pointer;
+      background:#fff;
+      border-radius:6px;
+      margin-bottom:4px;
+    ">
+    <div style="font-weight:600;">${p.nome}</div>
+  </div>
+`).join("");
     } catch (e) {
       console.error(e);
     }
@@ -515,3 +522,4 @@ function selecionarProduto(id, nome) {
   document.getElementById("produtoBusca").value = nome;
   document.getElementById("sugestoesProdutos").innerHTML = "";
 }
+
