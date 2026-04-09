@@ -221,20 +221,49 @@ async function carregarItensDaLista() {
     }
 
     const itens = (Array.isArray(data) ? data : []).filter(i => Number(i.lista_id) === Number(listaSelecionadaId));
-    status.textContent = `Total de itens: ${itens.length}`;
 
-    if (!itens.length) {
-      container.innerHTML = "Essa lista ainda não tem itens.";
-      return;
-    }
+// buscar produtos
+const respProd = await apiFetch("/api/produtos");
+const produtos = await respProd.json();
+const mapProdutos = {};
+(produtos || []).forEach(p => mapProdutos[p.id] = p.nome);
 
-    container.innerHTML = itens.map(item => `
-      <div style="padding:8px; border-bottom:1px solid #eee;">
-        <b>Produto ID:</b> ${item.produto_id}
-        <span style="margin-left:12px;"><b>Qtd:</b> ${item.quantidade}</span>
-        <span style="margin-left:12px; color:#666;"><b>Item ID:</b> ${item.id}</span>
+status.textContent = `Total de itens: ${itens.length}`;
+
+if (!itens.length) {
+  container.innerHTML = "Essa lista ainda não tem itens.";
+  return;
+}
+
+container.innerHTML = itens.map(item => `
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+    border-bottom:1px solid #eee;
+  ">
+    <div>
+      <div style="font-weight:600;">
+        ${mapProdutos[item.produto_id] || 'Produto #' + item.produto_id}
       </div>
-    `).join("");
+      <div style="font-size:12px; color:#666;">
+        Qtd: ${item.quantidade} | ID: ${item.id}
+      </div>
+    </div>
+
+    <button onclick="removerItem(${item.id})" style="
+      background:#7f1d1d;
+      color:#fff;
+      border:none;
+      padding:6px 10px;
+      border-radius:6px;
+      cursor:pointer;
+    ">
+      Remover
+    </button>
+  </div>
+`).join("");
   } catch (err) {
     status.textContent = "Erro ao carregar itens";
     container.innerHTML = String(err);
@@ -294,3 +323,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }, 500);
 });
+
+async function removerItem(id) {
+  if (!confirm("Remover item?")) return;
+
+  try {
+    const resp = await apiFetch(`/api/itens/${id}`, {
+      method: "DELETE"
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      alert("Erro ao remover: " + txt);
+      return;
+    }
+
+    await carregarItensDaLista();
+  } catch (e) {
+    alert("Erro ao remover: " + e);
+  }
+}
