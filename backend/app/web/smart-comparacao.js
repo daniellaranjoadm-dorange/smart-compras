@@ -105,7 +105,8 @@ function selecionarLista(id) {
   carregarResumoLista(id);
   listaSelecionadaId = Number(id);
   renderListas();
-  carregarItensDaLista();
+carregarItensDaLista();
+carregarComparacaoLista(listaSelecionadaId);
 }
 
 async function criarLista() {
@@ -523,3 +524,197 @@ function selecionarProduto(id, nome) {
   document.getElementById("sugestoesProdutos").innerHTML = "";
 }
 
+
+async function carregarComparacaoLista(listaId) {
+  if (!listaId) return;
+
+  const cidadeId = 1;
+  const box = document.getElementById("comparacaoListaBox");
+  if (!box) return;
+
+  box.innerHTML = `
+    <div style="
+      padding:14px;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      background:#fff;
+      margin-bottom:16px;
+    ">
+      Carregando comparação...
+    </div>
+  `;
+
+  try {
+    const resp = await apiFetch(`/api/comparacao/cidade/${cidadeId}/lista/${listaId}/otimizada`);
+    if (!resp.ok) {
+      box.innerHTML = `
+        <div style="
+          padding:14px;
+          border:1px solid #fecaca;
+          border-radius:12px;
+          background:#fff1f2;
+          color:#991b1b;
+          margin-bottom:16px;
+        ">
+          Não foi possível carregar a comparação da lista.
+        </div>
+      `;
+      return;
+    }
+
+    const data = await resp.json();
+    renderComparacaoLista(data);
+  } catch (e) {
+    box.innerHTML = `
+      <div style="
+        padding:14px;
+        border:1px solid #fecaca;
+        border-radius:12px;
+        background:#fff1f2;
+        color:#991b1b;
+        margin-bottom:16px;
+      ">
+        Erro ao carregar comparação.
+      </div>
+    `;
+    console.log("erro comparacao lista", e);
+  }
+}
+
+function moeda(v) {
+  const n = Number(v || 0);
+  return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function pct(v) {
+  const n = Number(v || 0);
+  return n.toFixed(2) + "%";
+}
+
+function renderComparacaoLista(data) {
+  const box = document.getElementById("comparacaoListaBox");
+  if (!box) return;
+
+  const unidades = Array.isArray(data.unidades) ? data.unidades : [];
+  const itens = Array.isArray(data.itens) ? data.itens : [];
+
+  if (!unidades.length) {
+    box.innerHTML = `
+      <div style="
+        padding:14px;
+        border:1px solid #e5e7eb;
+        border-radius:12px;
+        background:#fff;
+        margin-bottom:16px;
+      ">
+        Ainda não há comparação suficiente para essa lista.
+      </div>
+    `;
+    return;
+  }
+
+  const ranking = [...unidades].sort((a, b) => Number(a.total || 0) - Number(b.total || 0));
+  const melhor = ranking[0];
+  const pior = ranking[ranking.length - 1];
+
+  const economia = Number((pior.total || 0) - (melhor.total || 0));
+  const economiaPct = pior.total ? (economia / Number(pior.total)) * 100 : 0;
+
+  const maxTotal = Math.max(...ranking.map(x => Number(x.total || 0)), 1);
+
+  box.innerHTML = `
+    <div style="
+      border:1px solid #dbeafe;
+      background:#f8fbff;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    ">
+      <div style="font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#64748b; font-weight:700;">
+        Comparação inteligente
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1.3fr 1fr 1fr; gap:12px; margin-top:12px;">
+        <div style="padding:14px; background:#ecfdf5; border:1px solid #bbf7d0; border-radius:12px;">
+          <div style="font-size:12px; color:#166534;">Melhor mercado</div>
+          <div style="font-size:20px; font-weight:900; color:#166534; margin-top:4px;">${melhor.nome}</div>
+          <div style="font-size:14px; margin-top:6px;">Total: ${moeda(melhor.total)}</div>
+        </div>
+
+        <div style="padding:14px; background:#fff; border:1px solid #e5e7eb; border-radius:12px;">
+          <div style="font-size:12px; color:#64748b;">Economia</div>
+          <div style="font-size:22px; font-weight:900; color:#2563eb; margin-top:4px;">${moeda(economia)}</div>
+          <div style="font-size:13px; color:#64748b; margin-top:4px;">${pct(economiaPct)} vs mais caro</div>
+        </div>
+
+        <div style="padding:14px; background:#fff; border:1px solid #e5e7eb; border-radius:12px;">
+          <div style="font-size:12px; color:#64748b;">Mercados comparados</div>
+          <div style="font-size:22px; font-weight:900; margin-top:4px;">${ranking.length}</div>
+          <div style="font-size:13px; color:#64748b; margin-top:4px;">Ranking por total da lista</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="
+      border:1px solid #e5e7eb;
+      background:#fff;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    ">
+      <div style="font-size:18px; font-weight:800; margin-bottom:12px;">Ranking de mercados</div>
+      ${ranking.map((u, idx) => `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <div style="font-weight:700;">#${idx + 1} ${u.nome}</div>
+            <div style="font-weight:700;">${moeda(u.total)}</div>
+          </div>
+          <div style="height:10px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+            <div style="
+              width:${Math.max(8, (Number(u.total || 0) / maxTotal) * 100)}%;
+              height:100%;
+              background:${idx === 0 ? '#16a34a' : '#0f172a'};
+              border-radius:999px;
+            "></div>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+
+    <div style="
+      border:1px solid #e5e7eb;
+      background:#fff;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    ">
+      <div style="font-size:18px; font-weight:800; margin-bottom:12px;">Melhor mercado por item</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        ${itens.map(item => `
+          <div style="
+            display:grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap:12px;
+            padding:12px;
+            border:1px solid #eef2f7;
+            border-radius:12px;
+            background:#fafcff;
+          ">
+            <div>
+              <div style="font-weight:700;">${item.produto_nome || "Produto"}</div>
+              <div style="font-size:12px; color:#64748b;">Quantidade: ${item.quantidade || 1}</div>
+            </div>
+            <div>
+              <div style="font-size:12px; color:#64748b;">Melhor mercado</div>
+              <div style="font-weight:700;">${item.melhor_unidade_nome || "-"}</div>
+            </div>
+            <div>
+              <div style="font-size:12px; color:#64748b;">Melhor preço</div>
+              <div style="font-weight:800; color:#166534;">${moeda(item.melhor_preco || 0)}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
